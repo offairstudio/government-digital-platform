@@ -54,6 +54,15 @@ function toggleAcc(k){ state.accOpen[k]=!state.accOpen[k]; render(); }
 function toggleSec(k){ state.secOpen[k]=!state.secOpen[k]; render(); }
 function toggleNewReq(){ const m=document.getElementById('newReqMenu'); if(m) m.classList.toggle('hidden'); }
 function toggleMenu(){ document.body.classList.toggle('menu-open'); }
+function closeMenus(){ document.querySelectorAll('.usermenu,.subsysmenu,.tocmenu').forEach(m=>m.classList.add('hidden')); }
+function closeUserMenu(){ closeMenus(); }
+function toggleUserMenu(e){ e.stopPropagation(); const wrap=e.currentTarget.closest('.userpill-wrap'); const m=wrap&&wrap.querySelector('.usermenu'); if(!m) return; const willOpen=m.classList.contains('hidden'); closeMenus(); if(willOpen) m.classList.remove('hidden'); }
+function toggleSubsys(e){ e.stopPropagation(); const wrap=e.currentTarget.closest('.subsys-wrap'); const m=wrap&&wrap.querySelector('.subsysmenu'); if(!m) return; const willOpen=m.classList.contains('hidden'); closeMenus(); if(willOpen) m.classList.remove('hidden'); }
+function setSubsys(name){ state.subsys=name; render(); }
+function toggleTocMenu(e){ e.stopPropagation(); const wrap=e.currentTarget.closest('.toc-wrap'); const m=wrap&&wrap.querySelector('.tocmenu'); if(!m) return; const willOpen=m.classList.contains('hidden'); closeMenus(); if(willOpen) m.classList.remove('hidden'); }
+function gotoSec(k){ state.secOpen=state.secOpen||{}; state.secOpen[k]=true; render(); const el=document.getElementById('sec-'+k); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+function toggleToc(){ state.tocCollapsed=!state.tocCollapsed; render(); }
+document.addEventListener('click', closeMenus);
 function setQSearch(v){
   state.qSearch=v; render();
   const inp=document.querySelector('.toolbar input'); if(inp){ inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length); }

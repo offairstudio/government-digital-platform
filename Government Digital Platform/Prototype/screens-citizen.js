@@ -4,43 +4,38 @@
    ============================================================ */
 window.CITIZEN = (function(){
 
-  function cside(active){
-    return UI.side([
-      {g:'ניווט ראשי', items:[
-        {ic:'home', t:'אזור אישי',  screen:'home',  on:active==='home'},
-        {ic:'file', t:'הבקשות שלי', screen:'track', on:active==='track'},
-        {ic:'plus', t:'בקשה חדשה',  screen:'services', on:active==='services'},
-        {ic:'mail', t:'הודעות',     screen:'notifications', badge:'2', on:active==='notifications'},
-      ]},
-      {g:'הפרופיל שלי', items:[
-        {ic:'user', t:'פרטים אישיים', screen:'profile', on:active==='profile'},
-        {ic:'help', t:'מידע ועזרה',   screen:'home'},
-      ]},
-    ]);
-  }
+  /* תפריט הצד הוסתר — הניווט עבר לסרגל העליון (פרטי משתמש + הודעות) */
+  function cside(active){ return ''; }
 
   /* ---------- Login (gov.il national auth) ---------- */
   function login(){
+    /* אייקונים רשמיים מ-login.gov.il */
+    const I_SMART = `<img src="assets/logos/smart_card.svg" alt="" style="height:46px;width:auto;display:block">`;
+    const I_BIO = `<img src="assets/logos/bio_id.svg" alt="" style="height:44px;width:auto;display:block">`;
+    const I_QUICK = `<img src="assets/logos/passkey.svg" alt="" style="height:44px;width:auto;display:block">`;
     const html = `<div class="login"><div class="card-login">
-      <div class="lhead"><div class="seal" style="background:#fff;padding:5px">${UI.ministryLogo(34)}</div>
-        <div><h2>כניסה לאזור האישי</h2><p>משרד התרבות והספורט · משרד החדשנות, המדע והטכנולוגיה</p></div></div>
+      <div class="lhead"><div class="seal" style="background:#fff;padding:5px">${UI.stateLogo(34)}</div>
+        <div><h2>כניסה לאזור האישי</h2><p>מדינת ישראל · פורטל שירותים ממשלתי</p></div></div>
       <div class="lbody">
         <div class="lmain">
           <h3>הזדהות וכניסה</h3>
           <p class="muted" style="font-size:13px">כדי לשמור על המידע האישי שלך, הכניסה דורשת הזדהות באמצעות מערכת ההזדהות הממשלתית.</p>
           <button class="id-btn" onclick="nav('home')">${UI.icon("shield",20)} הזדהות לאומית</button>
-          <p class="muted" style="font-size:12px;text-align:center">פותח ונתמך על ידי מערכת ההזדהות הממשלתית · gov.il</p>
+          <button class="alt-card" onclick="nav('home')" style="margin-top:2px"><span class="ic">${UI.icon("mail",18)}</span><div><div>קוד אישי לדוא״ל</div><div class="muted" style="font-size:11.5px;font-weight:600">כולל דרכון — לקטינים / ללא ת.ז ישראלית</div></div></button>
+          <p class="muted" style="font-size:12px;text-align:center;margin-top:6px">פותח ונתמך על ידי מערכת ההזדהות הממשלתית · gov.il</p>
         </div>
         <div class="lalt">
-          <h3 style="font-size:14px">דרכים נוספות להזדהות</h3>
-          <button class="alt-card" onclick="nav('home')"><span class="ic">${UI.icon("mail",18)}</span><div><div>קוד אישי לדוא״ל</div><div class="muted" style="font-size:11.5px;font-weight:600">כולל דרכון — לקטינים / ללא ת.ז ישראלית</div></div></button>
-          <button class="alt-card" onclick="nav('home')"><span class="ic">${UI.icon("shield",18)}</span>כרטיס חכם</button>
-          <button class="alt-card" onclick="nav('home')"><span class="ic">${UI.icon("globe",18)}</span>רשת חברתית</button>
+          <h3 style="font-size:15px">דרכים נוספות להזדהות</h3>
+          <div class="auth-methods">
+            <button class="auth-tile" onclick="nav('home')"><span class="at-ic">${I_SMART}</span><span class="at-lbl">כרטיס חכם</span></button>
+            <button class="auth-tile" onclick="nav('home')"><span class="at-ic">${I_BIO}</span><span class="at-lbl">תעודת זהות ביומטרית</span></button>
+            <button class="auth-tile" onclick="nav('home')"><span class="at-ic">${I_QUICK}</span><span class="at-lbl">כניסה מהירה</span></button>
+          </div>
         </div>
       </div>
       <div class="sec-foot"><span>${UI.icon("lock",18)} גישה מאובטחת · תקן אבטחה ISO-27001</span><span>gov.il</span></div>
     </div></div>`;
-    return UI.bleed(UI.barCitizen(), html) + UI.govFooter();
+    return UI.bleed(UI.barAuth(), html) + UI.govFooter();
   }
 
   /* ---------- אזור אישי (my.gov.il style — מבוסס משימה, ללא Launcher) ---------- */
@@ -49,29 +44,17 @@ window.CITIZEN = (function(){
       const action = r.status==='wait'
         ? `<button class="btn btn-pri btn-sm" onclick="nav('apply')">השלם</button>`
         : `<button class="btn btn-out btn-sm" onclick="nav('track','${r.id}')">צפה</button>`;
-      return `<div class="lrow">${UI.statusBadge(r.status, r.label)}
+      return `<div class="lrow">
         <div class="info"><div class="nm">${r.service}</div>
-          <div class="mt"><span class="bdi">${r.id}</span> · עודכן ${r.updated}</div></div>${action}</div>`;
+          <div class="mt"><span class="bdi">${r.id}</span> · עודכן ${r.updated}</div></div>${UI.statusBadge(r.status, r.label)}${action}</div>`;
     }).join('');
 
     const main = `
       <div class="cit-hero">
-        <div class="hero-art">${UI.art('hero-illustration','flag',{cls:'on-blue',size:54})}</div>
         <div class="hero-tx">
           <h2>${greeting()}, עופר ברוידא</h2>
           <p>הבקשות שלך, הסטטוסים והשירותים — במקום אחד.</p>
-          <div class="hero-search"><input placeholder="חיפוש שירות, בקשה או מידע" aria-label="חיפוש שירות" onkeydown="goSearch(event,this.value)"><button class="go" aria-label="חיפוש" onclick="goSearch({key:'Enter'},this.previousElementSibling.value)">${UI.icon('search',18)}</button></div>
         </div>
-      </div>
-
-      <div class="section-head"><h2>עדכונים</h2><span class="cnt">1</span></div>
-      <div class="section-sub">בקשה אחת ממתינה לפעולה שלך. <button class="link" onclick="nav('notifications')">הפעלת התראות ←</button></div>
-      <div class="update-card">
-        <div class="uc-art">${UI.art('update-icon','alert',{size:30})}</div>
-        <div class="uc-tx"><b>בקשה ממתינה להשלמת פרטים</b>
-          <div class="src">16.06.2026 · אגף התרבות</div>
-          <p>מועמדות "מוזיקאי מצטיין תשפ״ו" <span class="bdi">M-2026-0042</span> — נדרש לצרף תעודת זהות (שני צדדים).</p></div>
-        <button class="btn btn-pri" onclick="nav('apply')">השלם עכשיו</button>
       </div>
 
       <div class="section-head"><h2>הבקשות שלי</h2></div>
@@ -187,46 +170,46 @@ window.CITIZEN = (function(){
       <h3 class="form-sec">${UI.icon('user',18)} פרטים אישיים</h3>
       <div class="info-box"><span class="ico">${UI.icon('bolt',18)}</span><div>שם, ת.ז ותאריך לידה מולאו ממערכת ההזדהות הממשלתית ואינם ניתנים לעריכה.</div></div>
       <div class="row">
-        <div class="field"><label>שם משפחה <span class="req">*</span></label><input value="ברוידא" readonly></div>
-        <div class="field"><label>שם פרטי <span class="req">*</span></label><input value="עופר" readonly></div></div>
+        <div class="field"><label><span class="req">*</span> שם משפחה</label><input value="ברוידא" readonly></div>
+        <div class="field"><label><span class="req">*</span> שם פרטי</label><input value="עופר" readonly></div></div>
       <div class="row">
-        <div class="field"><label>מין <span class="req">*</span></label><select><option>בחר</option><option selected>זכר</option><option>נקבה</option></select></div>
-        <div class="field"><label>ת.ז. <span class="req">*</span></label><input class="bdi" value="065465884" readonly></div></div>
+        <div class="field"><label><span class="req">*</span> מין</label><select><option>בחר</option><option selected>זכר</option><option>נקבה</option></select></div>
+        <div class="field"><label><span class="req">*</span> ת.ז.</label><input class="bdi" value="065465884" readonly></div></div>
       <div class="row">
-        <div class="field"><label>תאריך לידה <span class="req">*</span></label><input class="bdi" value="12.04.1990" readonly></div>
+        <div class="field"><label><span class="req">*</span> תאריך לידה</label><input class="bdi" value="12.04.1990" readonly></div>
         <div class="field" style="min-width:120px"><label>גיל</label><input value="34" readonly placeholder="מחושב אוטומטית"></div>
-        <div class="field"><label>ארץ לידה <span class="req">*</span></label><input value="ישראל"></div>
+        <div class="field"><label><span class="req">*</span> ארץ לידה</label><input value="ישראל"></div>
         <div class="field" style="min-width:120px"><label>שנת עלייה</label><input class="bdi" placeholder="אם רלוונטי"></div></div>
 
       <h3 class="form-sec">${UI.icon('home',18)} כתובת קבועה</h3>
       <div class="row">
-        <div class="field"><label>רחוב <span class="req">*</span></label><input placeholder="שם הרחוב"></div>
-        <div class="field" style="min-width:110px"><label>מס׳ בית <span class="req">*</span></label><input class="bdi"></div>
+        <div class="field"><label><span class="req">*</span> רחוב</label><input placeholder="שם הרחוב"></div>
+        <div class="field" style="min-width:110px"><label><span class="req">*</span> מס׳ בית</label><input class="bdi"></div>
         <div class="field" style="min-width:90px"><label>דירה</label><input class="bdi"></div></div>
       <div class="row">
-        <div class="field"><label>עיר <span class="req">*</span></label><input placeholder="עיר מגורים"></div>
+        <div class="field"><label><span class="req">*</span> עיר</label><input placeholder="עיר מגורים"></div>
         <div class="field"><label>מיקוד</label><input class="bdi"></div></div>
 
       <h3 class="form-sec">${UI.icon('phone',18)} פרטי קשר</h3>
       <div class="row">
-        <div class="field"><label>טלפון נייד <span class="req">*</span></label><input class="bdi" value="050-1234567" inputmode="tel"></div>
-        <div class="field"><label>דוא״ל <span class="req">*</span></label><input value="ofer@example.com" type="email"></div></div>
+        <div class="field"><label><span class="req">*</span> טלפון נייד</label><input class="bdi" value="050-1234567" inputmode="tel"></div>
+        <div class="field"><label><span class="req">*</span> דוא״ל</label><input value="ofer@example.com" type="email"></div></div>
       <div class="row">
         <div class="field"><label>טלפון נוסף</label><input class="bdi" inputmode="tel"></div>
         <div class="field"><label>בעל הטלפון הנוסף</label><select><option>בחר</option><option>אבא</option><option>אמא</option><option>אפוטרופוס</option><option>אחר</option></select></div></div>
 
       <h3 class="form-sec">${UI.icon('shield',18)} מועמד לשירות</h3>
       <div class="row">
-        <div class="field" style="flex:none;min-width:220px"><label>סוג שירות <span class="req">*</span></label>
+        <div class="field" style="flex:none;min-width:220px"><label><span class="req">*</span> סוג שירות</label>
           <div style="display:flex;gap:20px;padding-top:8px"><label class="check" style="margin:0"><input type="radio" name="svc" checked><span>צבאי</span></label><label class="check" style="margin:0"><input type="radio" name="svc"><span>לאומי</span></label></div></div>
-        <div class="field"><label>תאריך גיוס <span class="req">*</span></label><input class="bdi" placeholder="dd.mm.yyyy"></div></div>
+        <div class="field"><label><span class="req">*</span> תאריך גיוס</label><input class="bdi" placeholder="dd.mm.yyyy"></div></div>
       <label class="check"><input type="checkbox"><span>עוד לא קיבלתי תאריך גיוס</span></label>
 
       <h3 class="form-sec">${UI.icon('book',18)} לימודים כלליים</h3>
       <div class="row">
-        <div class="field"><label>בית-ספר <span class="req">*</span></label><input></div>
-        <div class="field"><label>יישוב <span class="req">*</span></label><input></div>
-        <div class="field" style="min-width:110px"><label>כיתה <span class="req">*</span></label><input></div></div>
+        <div class="field"><label><span class="req">*</span> בית-ספר</label><input></div>
+        <div class="field"><label><span class="req">*</span> יישוב</label><input></div>
+        <div class="field" style="min-width:110px"><label><span class="req">*</span> כיתה</label><input></div></div>
       <div class="row">
         <div class="field"><label>כתובת בית-הספר</label><input></div>
         <div class="field"><label>טלפון בית-הספר</label><input class="bdi"></div>
@@ -234,29 +217,29 @@ window.CITIZEN = (function(){
 
       <h3 class="form-sec">${UI.icon('clip',18)} העלאת מסמכים</h3>
       <div class="row">
-        <div class="field"><label>תמונת פספורט עדכנית <span class="req">*</span></label><div class="filechip ok">${UI.icon('doc',18)} passport.jpg <span class="ok-tag">הועלה ${UI.icon('check',16)}</span><span class="x">${UI.icon('x',16)}</span></div>
+        <div class="field"><label><span class="req">*</span> תמונת פספורט עדכנית</label><div class="filechip ok">${UI.icon('doc',18)} passport.jpg <span class="ok-tag">הועלה ${UI.icon('check',16)}</span><span class="x">${UI.icon('x',16)}</span></div>
           <div class="hint">JPG, PNG עד 5MB</div></div>
-        <div class="field"><label>תעודת זהות (שני צדדים) <span class="req">*</span></label>
+        <div class="field"><label><span class="req">*</span> תעודת זהות (שני צדדים)</label>
           <div class="dropzone ${isComplete?'req-miss':''}" onclick="toast('בחירת קובץ — אב-טיפוס')"><span class="big">${UI.icon('upload',24)}</span>לחץ להעלאת קובץ · PDF עד 10MB</div>
           ${isComplete?'<span class="errmsg" style="display:block">שדה חובה — חסר מסמך.</span>':''}</div></div>`;
 
     if(k==='training' && (state.discipline||'music')==='dance') return `
       <h3 class="form-sec">${UI.icon('book',18)} הכשרה מקצועית</h3>
       <div class="note-box"><span class="ico">${UI.icon('info',18)}</span><div>ההכוונה להכשרה מקצועית בלבד: תיכון אומנויות, להקה מקצועית, סטודיו מקצועי. אין לכלול חוגי ילדות. דרישת סף: לפחות שנתיים.</div></div>
-      <div class="row"><div class="field" style="max-width:300px"><label>שנת התחלת הכשרה מקצועית <span class="req">*</span></label>
+      <div class="row"><div class="field" style="max-width:300px"><label><span class="req">*</span> שנת התחלת הכשרה מקצועית</label>
         <select><option>בחר שנה</option><option>תשפ״ב</option><option>תשפ״ג</option><option>תשפ״ד</option><option>תשפ״ה</option><option>תשפ״ו</option></select></div></div>
       <h3 class="form-sec">מוסדות לימוד</h3>
       <div class="repeat-card"><div class="rc-h"><b>מוסד 1</b></div>
         <div class="row">
-          <div class="field"><label>שם בית הספר <span class="req">*</span></label><input></div>
+          <div class="field"><label><span class="req">*</span> שם בית הספר</label><input></div>
           <div class="field"><label>כתובת</label><input></div>
-          <div class="field" style="min-width:140px"><label>מס׳ שנות הכשרה <span class="req">*</span></label><input class="bdi"></div></div>
+          <div class="field" style="min-width:140px"><label><span class="req">*</span> מס׳ שנות הכשרה</label><input class="bdi"></div></div>
         <div class="row">
-          <div class="field"><label>סגנון ההתמחות <span class="req">*</span></label>
+          <div class="field"><label><span class="req">*</span> סגנון ההתמחות</label>
             <select><option>בחר סגנון</option><option>בלט קלאסי</option><option>מודרני</option><option>ג׳אז</option><option>היפ-הופ</option><option>מחול עכשווי</option><option>אחר</option></select></div></div>
         <div class="rc-sub">פרטי המורה</div>
         <div class="row">
-          <div class="field"><label>שם המורה/ים <span class="req">*</span></label><input></div>
+          <div class="field"><label><span class="req">*</span> שם המורה/ים</label><input></div>
           <div class="field"><label>טלפון המורה</label><input class="bdi"></div>
           <div class="field"><label>דוא״ל המורה</label><input></div></div></div>
       <button class="btn-add" onclick="toast('הוספת מוסד — אב-טיפוס')">${UI.icon('plus',16)} הוסף מוסד נוסף</button>`;
@@ -271,20 +254,20 @@ window.CITIZEN = (function(){
       </div>
       <h3 class="form-sec">נסיון מקצועי</h3>
       <div class="row">
-        <div class="field"><label>כלי נגינה ראשי <span class="req">*</span></label><input value="פסנתר"></div>
-        <div class="field"><label>מספר שנות לימוד <span class="req">*</span></label><input class="bdi" value="12"></div></div>
+        <div class="field"><label><span class="req">*</span> כלי נגינה ראשי</label><input value="פסנתר"></div>
+        <div class="field"><label><span class="req">*</span> מספר שנות לימוד</label><input class="bdi" value="12"></div></div>
       <div class="row">
         <div class="field"><label>כלי נגינה אחר</label><input></div>
         <div class="field"><label>מספר שנות לימוד (כלי אחר)</label><input class="bdi"></div></div>
       <h3 class="form-sec">מוסדות לימוד</h3>
       <div class="repeat-card"><div class="rc-h"><b>מוסד 1</b></div>
         <div class="row">
-          <div class="field"><label>שם המוסד <span class="req">*</span></label><input value="האקדמיה למוזיקה, ירושלים"></div>
+          <div class="field"><label><span class="req">*</span> שם המוסד</label><input value="האקדמיה למוזיקה, ירושלים"></div>
           <div class="field"><label>כתובת</label><input></div>
-          <div class="field" style="min-width:150px"><label>שנות לימוד במוסד <span class="req">*</span></label><input class="bdi" value="4"></div></div>
+          <div class="field" style="min-width:150px"><label><span class="req">*</span> שנות לימוד במוסד</label><input class="bdi" value="4"></div></div>
         <div class="rc-sub">פרטי המורה</div>
         <div class="row">
-          <div class="field"><label>שם המורה <span class="req">*</span></label><input></div>
+          <div class="field"><label><span class="req">*</span> שם המורה</label><input></div>
           <div class="field"><label>טלפון המורה</label><input class="bdi"></div>
           <div class="field"><label>דוא״ל המורה</label><input></div></div></div>
       <button class="btn-add" onclick="toast('הוספת מוסד — אב-טיפוס')">${UI.icon('plus',16)} הוסף מוסד נוסף</button>`;
@@ -316,11 +299,11 @@ window.CITIZEN = (function(){
       <div class="info-box"><span class="ico">${UI.icon('info',18)}</span><div>פרטו את היצירות שתציגו בבחינה (ניתן להוסיף מספר יצירות).</div></div>
       <div class="repeat-card"><div class="rc-h"><b>יצירה 1</b></div>
         <div class="row">
-          <div class="field"><label>שם היצירה <span class="req">*</span></label><input></div>
-          <div class="field"><label>כוריאוגרף <span class="req">*</span></label><input></div></div>
+          <div class="field"><label><span class="req">*</span> שם היצירה</label><input></div>
+          <div class="field"><label><span class="req">*</span> כוריאוגרף</label><input></div></div>
         <div class="row">
-          <div class="field"><label>סגנון <span class="req">*</span></label><input value="בלט קלאסי"></div>
-          <div class="field"><label>משך הקטע בדקות <span class="req">*</span></label><select><option>בחר משך</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option ${n===3?'selected':''}>${n}</option>`).join('')}</select></div></div></div>
+          <div class="field"><label><span class="req">*</span> סגנון</label><input value="בלט קלאסי"></div>
+          <div class="field"><label><span class="req">*</span> משך הקטע בדקות</label><select><option>בחר משך</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option ${n===3?'selected':''}>${n}</option>`).join('')}</select></div></div></div>
       <button class="btn-add" onclick="toast('הוסף יצירה — אב-טיפוס')">${UI.icon('plus',16)} הוסף יצירה</button>
       <div class="note" style="margin-top:8px">לבחינת מחול אין צורך בפרטי מלווים.</div>`;
     if(k==='repertoire') return `
@@ -328,20 +311,20 @@ window.CITIZEN = (function(){
       <div class="info-box"><span class="ico">${UI.icon('info',18)}</span><div>יש לרשום את שם המלחין ואת שם היצירות באותיות לטיניות.</div></div>
       <div class="repeat-card"><div class="rc-h"><b>יצירה 1</b></div>
         <div class="row">
-          <div class="field"><label>שם המלחין <span class="req">*</span></label><input value="Bach"></div>
-          <div class="field"><label>שם היצירה <span class="req">*</span></label><input value="Prelude No.1"></div></div>
+          <div class="field"><label><span class="req">*</span> שם המלחין</label><input value="Bach"></div>
+          <div class="field"><label><span class="req">*</span> שם היצירה</label><input value="Prelude No.1"></div></div>
         <div class="row">
-          <div class="field"><label>סגנון/תקופה <span class="req">*</span></label><input value="Baroque"></div>
-          <div class="field"><label>משך הקטע בדקות <span class="req">*</span></label><select><option>בחר משך</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option ${n===4?'selected':''}>${n}</option>`).join('')}</select></div></div></div>
+          <div class="field"><label><span class="req">*</span> סגנון/תקופה</label><input value="Baroque"></div>
+          <div class="field"><label><span class="req">*</span> משך הקטע בדקות</label><select><option>בחר משך</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option ${n===4?'selected':''}>${n}</option>`).join('')}</select></div></div></div>
       <button class="btn-add" onclick="toast('הוסף יצירה — אב-טיפוס')">${UI.icon('plus',16)} הוסף יצירה</button>
 
       <h3 class="form-sec">${UI.icon('user',18)} מלווים לבחינה</h3>
       <div class="info-box"><span class="ico">${UI.icon('info',18)}</span><div>ניתן לציין עד 4 מלווים.</div></div>
       <div class="repeat-card"><div class="rc-h"><b>מלווה 1</b></div>
         <div class="row">
-          <div class="field"><label>שם מלא <span class="req">*</span></label><input></div>
-          <div class="field"><label>כלי נגינה <span class="req">*</span></label><input></div>
-          <div class="field"><label>טלפון <span class="req">*</span></label><input class="bdi"></div>
+          <div class="field"><label><span class="req">*</span> שם מלא</label><input></div>
+          <div class="field"><label><span class="req">*</span> כלי נגינה</label><input></div>
+          <div class="field"><label><span class="req">*</span> טלפון</label><input class="bdi"></div>
           <div class="field"><label>דוא״ל</label><input></div></div></div>
       <button class="btn-add" onclick="toast('הוסף מלווה — אב-טיפוס')">${UI.icon('plus',16)} הוסף מלווה</button>`;
 
@@ -386,9 +369,9 @@ window.CITIZEN = (function(){
   function track(id){
     if(!id){
       const rows = DB.citizenRequests.map(r=>`
-        <div class="lrow" style="cursor:pointer" onclick="nav('track','${r.id}')">${UI.statusBadge(r.status, r.label)}
+        <div class="lrow lrow-mine" style="cursor:pointer" onclick="nav('track','${r.id}')">
           <div class="info"><div class="nm">${r.service}</div><div class="mt"><span class="bdi">${r.id}</span> · ${r.system} · עודכן ${r.updated}</div></div>
-          <span class="arr" style="color:var(--gov-blue);font-weight:800">←</span></div>`).join('');
+          ${UI.statusBadge(r.status, r.label)}<span class="arr" style="color:var(--gov-blue);font-weight:800">←</span></div>`).join('');
       const main = `
         ${UI.crumb([{t:'אזור אישי'},{t:'הבקשות שלי',strong:true}])}
         <h1 class="title">הבקשות שלי</h1>
@@ -407,12 +390,11 @@ window.CITIZEN = (function(){
       <li class="${closed?'cur':'todo'}"><span class="pt"></span><div class="nm">החלטת ועדה</div></li>
       <li class="${r.status==='appr'?'done':'todo'}"><span class="pt"></span><div class="nm">תוצאה${r.status==='appr'?' — אושרה':''}</div></li></ul>`;
     const docsHtml = det.docs.length ? det.docs.map(d=>`<div class="lrow">${UI.statusBadge(d.status,d.label)}<div class="info"><div class="nm">${d.name}</div></div>${d.status==='wait'?`<button class="btn btn-pri btn-sm" onclick="nav('apply')">העלה</button>`:`<button class="link" onclick="toast('צפייה במסמך — אב-טיפוס')">צפה</button>`}</div>`).join('') : `<div class="empty" style="padding:20px"><span class="muted">אין מסמכים מצורפים</span></div>`;
-    const msgsHtml = det.messages.map(m=>`<div class="lrow" style="align-items:flex-start"><span style="font-size:18px">${m.from==='המשרד'?'${UI.icon("mail",18)}':'${UI.icon("settings",18)}'}</span><div class="info"><div class="nm" style="font-size:13.5px">${m.from} · <span class="muted" style="font-weight:600">${m.date}</span></div><div class="mt" style="color:var(--secondary)">${m.body}</div></div></div>`).join('');
+    const msgsHtml = det.messages.map(m=>`<div class="lrow" style="align-items:flex-start"><span style="font-size:18px;color:var(--blue);line-height:1" aria-hidden="true">${m.from==='המשרד'?UI.icon("mail",18):UI.icon("settings",18)}</span><div class="info"><div class="nm" style="font-size:13.5px">${m.from} · <span class="muted" style="font-weight:600">${m.date}</span></div><div class="mt" style="color:var(--secondary)">${m.body}</div></div></div>`).join('');
     const main = `
-      ${UI.crumb([{t:r.system},{t:'בקשה'},{t:r.id,strong:true}])}
-      <div class="page-head"><div><h1 class="title">${r.service}</h1>
-        <div class="idpair" style="margin-top:10px"><span><b>מספר בקשה</b> <bdi>${r.id}</bdi></span>${det.ref&&det.ref!=='—'?`<span><b>מספר סימוכין</b> <bdi>${det.ref}</bdi></span>`:''}<span>הוגשה ${r.submitted}</span></div></div>
-        ${UI.statusBadge(r.status, r.label)}</div>
+      ${UI.crumb([{t:'אזור אישי',go:"nav('home')"},{t:'הבקשות שלי',go:"nav('track')"},{t:r.id,strong:true}])}
+      <div class="page-head"><h1 class="title">${r.service}</h1></div>
+      <div class="idpair" style="margin:8px 0 16px;align-items:center">${UI.statusBadge(r.status, r.label)}<span><b>מספר בקשה</b> <bdi>${r.id}</bdi></span>${det.ref&&det.ref!=='—'?`<span><b>מספר סימוכין</b> <bdi>${det.ref}</bdi></span>`:''}<span>הוגשה ${r.submitted}</span></div>
       <div class="two-col" style="margin-top:8px">
         <div class="col-main">
           <div class="card" style="margin-bottom:16px"><div class="card-h"><b>${UI.icon("list",18)} מעקב סטטוס</b></div><div class="card-b">${tl}</div></div>

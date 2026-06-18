@@ -11,22 +11,21 @@ window.OPS = (function(){
   /* ---------- שער בחירת מערכת (post-login Gateway) ---------- */
   function gateway(){
     const cards = [
-      {id:'driving', logo:'נ', name:'נהיגה ספורטיבית', org:'רשות לנהיגה ספורטיבית', tag:'רשות', state:'active'},
-      {id:'human',   logo:'ה', name:'הון אנושי',       org:'מטה · משרד התרבות והספורט', tag:'מטה', state:'active'},
-      {id:'excel',   logo:'מ', name:'מערכת מצטינים',   org:'אגף התרבות', tag:'אגף', state:'maint'},
-      {id:'funds',   logo:'ק', name:'קרנות ותמיכות',   org:'אגף התרבות', tag:'אגף', state:'lock'},
+      {id:'driving', logo:'נ', name:'נהיגה ספורטיבית', org:'רשות לנהיגה ספורטיבית', tag:'רשות', img:'assets/systems/driving.jpg', state:'active'},
+      {id:'human',   logo:'ה', name:'הון אנושי',       org:'מטה · משרד החדשנות, המדע והטכנולוגיה', tag:'מטה', img:'assets/systems/human.jpg', inv:true, state:'active'},
+      {id:'excel',   logo:'מ', name:'מערכת מצטינים',   org:'אגף התרבות', tag:'אגף', img:'assets/systems/excel.png', state:'maint'},
+      {id:'funds',   logo:'ק', name:'קרנות ותמיכות',   org:'אגף התרבות', tag:'אגף', img:'assets/systems/funds.jpg', state:'lock'},
     ];
     const card = c=>{
       if(c.state==='maint') return `<div class="gw-card maint disabled">
-        <div class="banner maint"><div class="state-msg"><span class="si">${UI.icon("wrench",20)}</span>המערכת מתעדכנת<br><span style="font-weight:600;font-size:12.5px">אנא חזרו במועד מאוחר יותר</span></div></div>
-        <div class="ftr"><div><div class="nm">${c.name}</div><div class="org">${c.org}</div></div><div class="seal" style="background:#fff;padding:3px">${UI.ministryLogo(26)}</div></div></div>`;
+        <div class="banner maint"><img class="bn-img" src="${c.img}" alt="" loading="lazy"><div class="state-msg"><span class="si">${UI.icon("wrench",20)}</span>המערכת מתעדכנת<br><span style="font-weight:600;font-size:12.5px">אנא חזרו במועד מאוחר יותר</span></div></div>
+        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(26):UI.ministryLogo(26)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></div>`;
       if(c.state==='lock') return `<div class="gw-card disabled" title="אין הרשאה">
-        <div class="banner lock"><div class="state-msg"><span class="si">${UI.icon("lock",18)}</span>אין גישה למערכת זו<br><span style="font-weight:600;font-size:12.5px">נדרש כרטיס חכם</span></div></div>
-        <div class="ftr"><div><div class="nm">${c.name}</div><div class="org">${c.org}</div></div><div class="seal" style="background:#fff;padding:3px">${UI.ministryLogo(26)}</div></div></div>`;
+        <div class="banner lock"><img class="bn-img" src="${c.img}" alt="" loading="lazy"><div class="state-msg"><span class="si">${UI.icon("lock",18)}</span>אין גישה למערכת זו<br><span style="font-weight:600;font-size:12.5px">נדרש כרטיס חכם</span></div></div>
+        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(26):UI.ministryLogo(26)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></div>`;
       return `<button class="gw-card" onclick="enterSystem('${c.id}')">
-        <div class="banner"><div class="gw-logo">${c.logo}</div></div>
-        <div class="ftr"><div><div class="nm">${c.name}</div><div class="org">${c.org}</div></div>
-          <span class="tag">${c.tag}</span><span class="go">←</span></div></button>`;
+        <div class="banner"><img class="bn-img" src="${c.img}" alt="" loading="lazy"><span class="tag">${c.tag}</span></div>
+        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(26):UI.ministryLogo(26)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></button>`;
     };
     const html = `<div class="gateway-wrap">
       <div class="gw-head"><h1>בחרו במערכת הרצויה</h1>
@@ -59,17 +58,17 @@ window.OPS = (function(){
       const grp = rows.filter(r=>g.keys.includes(r.status));
       const isOpen = open[g.k];
       const body = grp.length ? grp.map(r=>`
-        <div class="req-row">
-          ${UI.statusBadge(r.status, r.label)}
+        <div class="req-row" onclick="nav('case','${r.id}')" role="button" tabindex="0">
           <div class="who"><div class="nm">${r.name} <span class="bdi" style="color:var(--muted);font-weight:600">${r.tz}</span></div>
             <div class="role">${r.type}</div></div>
+          ${UI.statusBadge(r.status, r.label)}
           <div class="col"><span class="lbl">תאריך עדכון</span>${r.updated}</div>
           <div class="col"><span class="lbl">הערת סטטוס</span>${r.alarm?`<span style="color:var(--danger)">חריגת SLA</span>`:'—'}</div>
           <div class="col"><span class="lbl">מספר סימוכין</span><span class="bdi">${r.ref||'RNW_'+r.id.slice(-4)}</span></div>
           <div class="acts">
-            <button title="עריכה / פתיחה" onclick="nav('case','${r.id}')">${UI.icon("edit",18)}</button>
-            <button title="הורדה" onclick="toast('הורדה — אב-טיפוס')">${UI.icon("download",16)}</button>
-            <button title="עוד" onclick="toast('פעולות שורה — אב-טיפוס')">${UI.icon("more",18)}</button>
+            <button title="עריכה / פתיחה" onclick="event.stopPropagation();nav('case','${r.id}')">${UI.icon("edit",18)}</button>
+            <button title="הורדה" onclick="event.stopPropagation();toast('הורדה — אב-טיפוס')">${UI.icon("download",16)}</button>
+            <button title="עוד" onclick="event.stopPropagation();toast('פעולות שורה — אב-טיפוס')">${UI.icon("more",18)}</button>
           </div>
         </div>`).join('')
         : `<div class="empty" style="padding:24px"><span class="muted">אין בקשות בקטגוריה זו</span></div>`;
@@ -88,9 +87,9 @@ window.OPS = (function(){
           <div class="sub" style="margin:8px 0 0">רשות לנהיגה ספורטיבית · ${DB.queue.length} בקשות · משובץ לפי תפקיד והרשאה.</div></div>
         <div style="position:relative">
           <button class="btn btn-pri" onclick="toggleNewReq()">+ הגשת בקשה חדשה</button>
-          <div id="newReqMenu" class="card hidden" style="position:absolute;inset-inline-end:0;top:48px;z-index:20;min-width:300px;box-shadow:var(--shadow-3)">
-            <div class="card-h"><b>סוגי בקשות</b></div>
-            ${reqTypes.map(t=>`<button class="svc" style="padding:12px 18px" onclick="toast('פתיחת בקשה — אב-טיפוס');toggleNewReq()"><div class="t"><b style="font-size:14px">${t}</b></div><span class="arr">←</span></button>`).join('')}
+          <div id="newReqMenu" class="dropdown-pop hidden" style="position:absolute;inset-inline-end:0;top:52px;z-index:30;min-width:300px">
+            <div class="dp-head">סוגי בקשות</div>
+            ${reqTypes.map(t=>`<button class="dp-item" onclick="toast('פתיחת בקשה — אב-טיפוס');toggleNewReq()"><span>${t}</span>${UI.icon('arrowl',16)}</button>`).join('')}
           </div>
         </div>
       </div>
@@ -126,8 +125,8 @@ window.OPS = (function(){
       <li class="todo"><span class="pt"></span><div class="nm">בחינה מקצועית</div></li>
       <li class="todo"><span class="pt"></span><div class="nm">החלטה</div></li></ul>`;
 
-    const section = (k,num,title,body)=>`<div class="section ${sec[k]?'open':''}">
-      <button class="section-h" onclick="toggleSec('${k}')" aria-expanded="${sec[k]?'true':'false'}"><span class="num">${num}</span><span class="ttl">${title}</span><span class="sec-hint">${sec[k]?'לחצו לכיווץ':'לחצו להרחבה'}</span><span class="chev">${UI.icon("chevdown",18)}</span></button>
+    const section = (k,num,title,body)=>`<div class="section ${sec[k]?'open':''}" id="sec-${k}">
+      <button class="section-h" onclick="toggleSec('${k}')" aria-expanded="${sec[k]?'true':'false'}"><span class="ttl">${title}</span><span class="num">${num}</span><span class="chev">${UI.icon("chevdown",18)}</span></button>
       <div class="section-b">${body}</div></div>`;
 
     const dataBody = `<div class="row">
@@ -145,7 +144,7 @@ window.OPS = (function(){
           <div class="filechip" style="color:var(--st-wait-t);background:var(--st-wait-b)">${UI.icon("doc",18)} חסר — נדרש מהמגיש</div></div>
       </div>
       <div class="row" style="margin-top:6px">
-        <div class="field"><label>תאריך בדיקה ארגומטרית <span class="req">*</span></label><input class="bdi" placeholder="dd/mm/yyyy" value="—"></div>
+        <div class="field"><label><span class="req">*</span> תאריך בדיקה ארגומטרית</label><input class="bdi" placeholder="dd/mm/yyyy" value="—"></div>
       </div>`;
     const tableBody = `<div class="tbl-tools" style="border:none;padding:0 0 10px">
         <input class="search" placeholder="חיפוש בטבלה"><span class="chip">סינון ${UI.icon("chevdown",18)}</span><span class="chip">בחירת עמודות ${UI.icon("chevdown",18)}</span><span class="chip sp">+ הוספת נתונים</span></div>
@@ -154,33 +153,44 @@ window.OPS = (function(){
     const emptyBody = `<div class="empty"><div class="ic">${UI.icon("inbox",20)}</div><b>אין נתונים להצגה</b><p>ניתן להוסיף שורה ידנית או לטעון קובץ נתונים.</p>
         <div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-out" onclick="toast('הוספת שורה — אב-טיפוס')">הוספת שורה</button><button class="btn btn-out" onclick="toast('העלאת CSV — אב-טיפוס')">העלאת קובץ CSV</button></div></div>`;
 
-    const main = `
-      ${UI.crumb([{t:SYSTEM},{t:'תור בקשות'},{t:r.id,strong:true}])}
-      <div class="case-head">
-        <div class="who"><b>${r.name} · ${r.type}</b>
-          <div class="meta"><span class="bdi">ת.ז ${r.tz}</span> · נהג · הוגש 12.06.2026 · עודכן 16.06 14:22</div></div>
-        ${UI.statusBadge(r.status, r.label)}
-      </div>
-      <div class="case-actions">
-        <button class="btn btn-pri btn-sm" onclick="nav('decision','${r.id}')">${UI.icon("send",16)} בדיקה ושליחה</button>
-        <button class="btn btn-out btn-sm" onclick="requestCompletion()">בקשת השלמה</button>
-        <button class="btn btn-out btn-sm" onclick="toast('נשמר כטיוטא',true)">${UI.icon("save",18)} טיוטא</button>
-        <button class="btn btn-danger btn-sm" onclick="toast('מחיקה — אב-טיפוס')">${UI.icon("trash",16)} מחיקה</button>
-        <span class="ts grow">${UI.icon("clock",16)} עודכן 03/11 14:22</span>
-        <button class="btn btn-ghost btn-sm" onclick="toast('תוכן עניינים — אב-טיפוס')">${UI.icon("menu",16)} תוכן עניינים</button>
-      </div>
-      ${section('data','1/4','נתוני הבקשה',dataBody)}
-      ${section('table','2/4','טבלת תחרויות',tableBody)}
-      ${section('empty','3/4','רשומות נוספות',emptyBody)}
-      ${section('docs','4/4','מסמכים והעלאות',docsBody)}
+    const secs = [
+      {k:'data',  t:'נתוני הבקשה',     body:dataBody},
+      {k:'table', t:'טבלת תחרויות',    body:tableBody},
+      {k:'empty', t:'רשומות נוספות',   body:emptyBody},
+      {k:'docs',  t:'מסמכים והעלאות',  body:docsBody},
+    ];
+    const sectionsHtml = secs.map((s,i)=>section(s.k, `${i+1}/${secs.length}`, s.t, s.body)).join('');
+    const tocItems = secs.map((s,i)=>`<button class="toc-item" onclick="gotoSec('${s.k}')"><span class="toc-num">${i+1}</span><span>${s.t}</span></button>`).join('');
+    const tocMenuItems = secs.map((s,i)=>`<button class="dp-item" onclick="closeMenus();gotoSec('${s.k}')"><span>${i+1}. ${s.t}</span></button>`).join('');
 
-      <div class="two-col" style="margin-top:18px">
-        <div class="card accent col-side"><div class="card-h"><b>היסטוריית תהליך</b></div><div class="card-b">${tl}</div></div>
-        <div class="card accent col-side"><div class="card-b"><b style="font-size:14px">${UI.icon("mail",18)} תקשורת עם המגיש</b>
-          <p class="note" style="margin-top:6px">"בקשת השלמה" תעדכן את הבקשה ל"ממתין למגיש" ותשלח הודעה לאזור האישי של המגיש (אותה Request, תצוגת אזרח — XF-1).</p>
-          <button class="btn btn-out btn-block" style="margin-top:10px" onclick="toast('הודעה למגיש — אב-טיפוס')">שליחת הודעה</button></div></div>
+    const caseBar = `<header class="case-bar">
+        <button class="case-back" onclick="nav('requests')" title="חזרה לתור הבקשות" aria-label="חזרה לתור הבקשות">${UI.icon('arrowr',20)}</button>
+        <div class="case-id">
+          <div class="ci-title">${r.name} · ${r.type} ${UI.statusBadge(r.status, r.label)}</div>
+          <div class="ci-meta"><span class="bdi">ת.ז ${r.tz}</span> · נהג · הוגש 12.06.2026 · עודכן 16.06 14:22</div>
+        </div>
+        <div class="case-bar-actions">
+          <div class="toc-wrap">
+            <button class="btn btn-ghost btn-sm" onclick="toggleTocMenu(event)" aria-haspopup="true">${UI.icon("menu",16)} תוכן עניינים</button>
+            <div class="tocmenu dropdown-pop hidden" style="position:absolute;inset-inline-start:0;top:46px;z-index:50;min-width:240px"><div class="dp-head">תוכן עניינים</div>${tocMenuItems}</div>
+          </div>
+          <button class="btn btn-danger btn-sm icon-collapse" title="מחיקה" onclick="toast('מחיקה — אב-טיפוס')">${UI.icon("trash",16)}<span class="btn-lbl">מחיקה</span></button>
+          <button class="btn btn-out btn-sm icon-collapse" title="שמירה כטיוטא" onclick="toast('נשמר כטיוטא',true)">${UI.icon("save",18)}<span class="btn-lbl">טיוטא</span></button>
+          <button class="btn btn-pri btn-sm" onclick="nav('decision','${r.id}')">${UI.icon("send",16)} בדיקה ושליחה</button>
+        </div>
+      </header>`;
+    const collapsed = state.tocCollapsed;
+    const main = `
+      <div class="case-layout${collapsed?' toc-collapsed':''}">
+        <div class="case-doc">
+          ${sectionsHtml}
+        </div>
+        <aside class="case-toc${collapsed?' collapsed':''}">
+          <div class="toc-h"><button class="toc-toggle" onclick="toggleToc()" title="כיווץ / הרחבה" aria-label="כיווץ תוכן עניינים">${UI.icon("menu",16)}</button><span class="toc-h-tx">תוכן עניינים</span></div>
+          ${tocItems}
+        </aside>
       </div>`;
-    return UI.shell(UI.barOps(SYSTEM), null, main, {wide:true});
+    return UI.shell(caseBar, null, main, {wide:true});
   }
 
   /* ---------- מסך הכרעה ---------- */
@@ -195,7 +205,7 @@ window.OPS = (function(){
         <div class="lrow">${UI.statusBadge('appr','עבר')}<div class="info"><div class="nm">חוות דעת בודק מקצועי</div><div class="mt">"עומד בדרישות — ממליץ לאשר"</div></div></div>
       </div>
       <div class="card" style="max-width:760px"><div class="card-h"><b>החלטה</b></div><div class="card-b">
-        <div class="field"><label>נימוק החלטה <span class="req">*</span></label>
+        <div class="field"><label><span class="req">*</span> נימוק החלטה</label>
           <textarea id="decReason" placeholder="הקלד נימוק שיוצג למגיש בהודעה ובאזור האישי..."></textarea>
           <span class="errmsg">יש להזין נימוק לפני ההכרעה.</span></div>
         <div class="actionbar" style="margin-top:8px">
@@ -250,7 +260,7 @@ window.OPS = (function(){
       </div>
       <div class="sec-foot"><span>${UI.icon("lock",18)} גישה מאובטחת · לעובדים מורשים בלבד</span><span>gov.il</span></div>
     </div></div>`;
-    return UI.bleed(UI.barGateway(), html) + UI.govFooter();
+    return UI.bleed(UI.barAuth(), html) + UI.govFooter();
   }
 
   /* ---------- מודול ועדות ובחינות (talentportal §3) ---------- */

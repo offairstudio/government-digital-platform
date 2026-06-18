@@ -33,6 +33,7 @@ window.UI = (function(){
     calendar:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/>',
     chevdown:'<path d="m6 9 6 6 6-6"/>',
     arrowl:'<path d="M14 6 8 12l6 6"/>',
+    arrowr:'<path d="m10 6 6 6-6 6"/>',
     send:'<path d="M21 4 3 11l7 2 2 7z"/><path d="M21 4 12 13"/>',
     save:'<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/>',
     trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
@@ -63,69 +64,95 @@ window.UI = (function(){
   /* ---- ministry colorful-star logo (SVG) ---- */
   function ministryLogo(size){
     const s=size||40;
-    const cols=['#E0342B','#F08A22','#F4C430','#4CA63C','#2C7BD0','#7E3DA3'];
-    const petals=cols.map((c,i)=>`<path d="M20 20 C14 13 15 5 20 3 C25 5 26 13 20 20 Z" fill="${c}" transform="rotate(${i*60} 20 20)"/>`).join('');
-    return `<svg width="${s}" height="${s}" viewBox="0 0 40 40" role="img" aria-label="לוגו משרד התרבות והספורט">${petals}<circle cx="20" cy="20" r="2.7" fill="#fff"/></svg>`;
+    return `<img src="assets/logos/culture-symbol.svg" alt="לוגו משרד התרבות והספורט" style="height:${s}px;width:auto;display:block">`;
+  }
+  function stateLogo(size){
+    const s=size||40;
+    return `<img src="assets/logos/state-emblem.svg" alt="סמל מדינת ישראל" style="height:${s}px;width:auto;display:block">`;
   }
 
   /* ---- header pieces ---- */
-  function emblem(sub){
+  function emblem(title, sub, logoHtml){
+    const subTxt = (sub===undefined) ? 'פורטל שירותים ממשלתי' : sub;
     return `<button class="brand-lock" onclick="goLanding()" title="פורטל שירותים ממשלתי — דף הבית">
-      <span class="emblem ministry">${ministryLogo(38)}</span>
+      <span class="emblem ministry">${logoHtml||stateLogo(38)}</span>
       <span class="bl-div"></span>
-      <span class="bl-tx"><span class="wm">משרד התרבות והספורט</span><span class="wm-sub">${sub||'משרד החדשנות, המדע והטכנולוגיה'}</span></span>
+      <span class="bl-tx"><span class="wm">${title||'מדינת ישראל'}</span>${subTxt?`<span class="wm-sub">${subTxt}</span>`:''}</span>
     </button>`;
   }
   function iconbtn(name,title,onclick,dot){
     return `<button class="iconbtn" title="${title}" aria-label="${title}" ${onclick?`onclick="${onclick}"`:''}>${icon(name,19)}${dot?`<span class="dot">${dot}</span>`:''}</button>`;
   }
-  function userPill(name,sub,onclick){
-    return `<button class="userpill" onclick="${onclick||''}"><span class="ava">${name[0]}</span>
-      <span class="up-tx"><span>${name}</span><span class="sub">${sub}</span></span>${icon('chevdown',14)}</button>`;
+  function userPill(name,sub,items){
+    const menu = (items||[]).map(it=> it.div
+      ? `<div class="um-div"></div>`
+      : `<button class="um-item${it.danger?' danger':''}" onclick="closeUserMenu();${it.onclick}">${icon(it.icon,17)}<span>${it.label}</span></button>`
+    ).join('');
+    return `<div class="userpill-wrap">
+      <button class="userpill" onclick="toggleUserMenu(event)" aria-haspopup="true"><span class="ava">${icon('user',17)}</span>
+        <span class="up-tx"><span>${name}</span><span class="sub">${sub}</span></span>${icon('chevdown',14)}</button>
+      <div class="usermenu hidden">${menu}</div>
+    </div>`;
   }
 
   function barCitizen(){
     return `<header class="govbar light"><div class="left">
-        <button class="hamburger" aria-label="תפריט" onclick="toggleMenu()">${icon('menu',22)}</button>
         ${emblem()}</div>
       <div class="right">
-        <div class="hdr-search">${icon('search',18)}<input placeholder="חיפוש שירות או מידע" aria-label="חיפוש שירות או מידע" onkeydown="goSearch(event,this.value)"></div>
-        <button class="iconbtn" title="נגישות" aria-label="הגדרות נגישות" onclick="toast('סרגל נגישות — אב-טיפוס')"><span style="font-weight:700;font-size:16px">א</span></button>
         <button class="iconbtn lang" title="שפה: English" aria-label="שינוי שפה" onclick="toast('English — אב-טיפוס')">${icon('globe',18)}<span>עברית</span></button>
-        ${iconbtn('bell','הודעות',"nav('notifications')",2)}
-        ${userPill('עופר ברוידא','אזור אישי',"nav('profile')")}
+        ${iconbtn('mail','הודעות',"nav('notifications')",2)}
+        ${userPill('עופר ברוידא','אזור אישי',[
+          {label:'אזור אישי',icon:'home',onclick:"nav('home')"},
+          {label:'הבקשות שלי',icon:'file',onclick:"nav('track')"},
+          {label:'פרטים אישיים',icon:'user',onclick:"nav('profile')"},
+          {div:true},
+          {label:'התנתקות',icon:'arrowl',onclick:'goLanding()',danger:true},
+        ])}
       </div></header>`;
   }
   function barGateway(){
-    return `<header class="govbar dark"><div class="left">${emblem('מערכת ניהול הבקשות')}</div>
-      <div class="right">${userPill('רינת אדרי','יציאה','goLanding()')}</div></header>`;
+    return `<header class="govbar dark"><div class="left">${emblem('מערכת ניהול בקשות','')}</div>
+      <div class="right">${userPill('רינת אדרי','יציאה',[
+        {label:'התנתקות',icon:'arrowl',onclick:'goLanding()',danger:true},
+      ])}</div></header>`;
   }
   function barOps(system){
+    const subsystems = ['רישוי נהגים ספורטיביים','רישום אגודות ומועדונים','מבחנים והסמכות','פיקוח ובטיחות'];
+    const curSub = state.subsys || subsystems[0];
     return `<header class="govbar dark"><div class="left">
         <button class="applauncher" title="בחירת מערכת" aria-label="בחירת מערכת" onclick="nav('gateway')">${icon('grid',22)}</button>
-        ${emblem('מערכת ניהול הבקשות')}
-        <div class="ctx">${system}<span class="sw" onclick="nav('gateway')">תת מערכת ${icon('chevdown',13)}</span></div></div>
+        <button class="brand-lock" onclick="goLanding()" title="פורטל שירותים ממשלתי — דף הבית"><span class="emblem ministry">${ministryLogo(38)}</span></button>
+        <div class="ctx">
+          <span class="ctx-sys">${system}</span>
+          <div class="subsys-wrap">
+            <button class="sw" onclick="toggleSubsys(event)" aria-haspopup="true">${curSub} ${icon('chevdown',13)}</button>
+            <div class="subsysmenu hidden">
+              ${subsystems.map(s=>`<button class="um-item${s===curSub?' on':''}" onclick="closeMenus();setSubsys('${s}')">${s}</button>`).join('')}
+              <div class="um-div"></div>
+              <button class="um-item" onclick="closeMenus();nav('gateway')">${icon('grid',16)}<span>החלפת מערכת</span></button>
+            </div>
+          </div></div></div>
       <div class="right">
-        <button class="iconbtn" title="נגישות" aria-label="הגדרות נגישות" onclick="toast('סרגל נגישות — אב-טיפוס')"><span style="font-weight:700;font-size:16px">א</span></button>
         ${iconbtn('bell','הודעות',"nav('requests')",5)}
-        ${userPill('רינת אדרי','פקיד מטפל','goLanding()')}
+        ${userPill('רינת אדרי','פקיד מטפל',[
+          {label:'החלפת מערכת',icon:'grid',onclick:"nav('gateway')"},
+          {div:true},
+          {label:'התנתקות',icon:'arrowl',onclick:'goLanding()',danger:true},
+        ])}
       </div></header>`;
+  }
+
+  /* ---- מסך טרום-הזדהות: כותרת מינימלית (ללא חיפוש / תפריט משתמש) ---- */
+  function barAuth(){
+    return `<header class="govbar light"><div class="left">${emblem()}</div>
+      <div class="right"><span class="muted" style="display:flex;align-items:center;gap:8px;font-size:13.5px">${icon('shield',16)} gov.il</span></div></header>`;
   }
 
   /* ---- Landing / portal entry (מסך פתיחה לשני סוגי המשתמשים) ---- */
   function landing(){
     return `<div class="landing">
-      <div class="landing-top">
-        <span class="brand-lock" style="cursor:default">
-          <span class="emblem ministry">${ministryLogo(36)}</span>
-          <span class="bl-div" style="background:var(--line)"></span>
-          <span class="bl-tx"><span class="wm" style="color:var(--ink-strong)">משרד התרבות והספורט</span>
-            <span class="wm-sub">משרד החדשנות, המדע והטכנולוגיה</span></span>
-        </span>
-        <div class="muted" style="display:flex;align-items:center;gap:8px;font-size:13.5px">${icon('shield',16)} gov.il</div>
-      </div>
       <div class="landing-mid">
-        <div class="emblem-lg">${ministryLogo(64)}</div>
+        <div class="emblem-lg">${stateLogo(64)}</div>
         <div class="kicker">מדינת ישראל</div>
         <h1>פורטל שירותים ממשלתי אחיד</h1>
         <p class="lead">מערכת אחת, חוויה אחת — להגשת בקשות ולניהולן. בחרו את נקודת הכניסה המתאימה לכם.</p>
@@ -206,7 +233,7 @@ window.UI = (function(){
   }
 
   function statusBadge(k,label){ const s=DB.STATUS[k]||DB.STATUS.draft; return `<span class="badge-st ${s.cls}">${label||s.cat}</span>`; }
-  function crumb(parts){ return `<div class="crumb">${parts.map((p,i)=>(i>0?'<span class="sep">/</span>':'')+(p.strong?`<b>${p.t}</b>`:p.t)).join('')}</div>`; }
+  function crumb(parts){ return `<div class="crumb">${parts.map((p,i)=>(i>0?'<span class="sep">/</span>':'')+(p.strong?`<b>${p.t}</b>`:(p.go?`<button class="crumb-link" onclick="${p.go}">${p.t}</button>`:p.t))).join('')}</div>`; }
   function stepper(steps,cur,opts){
     opts=opts||{};
     return `<div class="stepper" role="list">${steps.map((s,i)=>{
@@ -219,11 +246,11 @@ window.UI = (function(){
 
   function govFooter(){
     return `<footer class="govfoot">
-      <div class="brand"><span class="fseal" style="background:#fff;padding:4px">${ministryLogo(22)}</span> פורטל שירותים ממשלתי</div>
+      <div class="brand"><span class="fseal" style="background:#fff;padding:4px">${stateLogo(22)}</span> פורטל שירותים ממשלתי</div>
       <div class="lnks"><a href="#" onclick="goMap();return false">מפת מסכים</a><a href="#" onclick="return false">הצהרת נגישות</a><a href="#" onclick="return false">תנאי שימוש</a><a href="#" onclick="return false">פרטיות</a><a href="#" onclick="return false">צור קשר</a></div>
       <div>מופעל ע״י מערכת ההזדהות הממשלתית · gov.il</div></footer>`;
   }
-  function fab(t){ return `<button class="fab" onclick="toast('${t||'עוזר שירות'} — אב-טיפוס')">${icon('spark',18)} ${t||'עוזר שירות'}</button>`; }
+  function fab(t){ const lbl=t||'תמיכה'; return `<button class="fab" onclick="toast('${lbl} — אב-טיפוס')">${lbl}</button>`; }
 
   /* ---- Spot illustration (gov.il style) — medallion + icon + dot motif. ניתן להחלפה בארט הלקוח ---- */
   function art(key, iconName, opts){
@@ -252,7 +279,7 @@ window.UI = (function(){
   }
   function bleed(bar, html){ return bar + html; }
 
-  return {icon, ministryLogo, emblem, iconbtn, barCitizen, barGateway, barOps, landing, designMap, side, statusBadge, crumb, stepper, progress, govFooter, fab, art, avatar, badgeOk, shell, bleed};
+  return {icon, ministryLogo, stateLogo, emblem, iconbtn, barCitizen, barGateway, barOps, barAuth, landing, designMap, side, statusBadge, crumb, stepper, progress, govFooter, fab, art, avatar, badgeOk, shell, bleed};
 })();
 
 /* ---- Toast ---- */
