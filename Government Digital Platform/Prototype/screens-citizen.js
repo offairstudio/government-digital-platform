@@ -111,14 +111,15 @@ window.CITIZEN = (function(){
             <h2 class="sec" style="margin-bottom:10px">איך מגישים את הבקשה</h2>
             <ol style="padding-inline-start:20px;font-size:14.5px">${s.how.map(h=>`<li style="margin-bottom:6px">${h}</li>`).join('')}</ol>
             <div class="note-box" style="margin-top:14px"><span class="ico">${UI.icon("info",18)}</span><div>${s.notice}</div></div></div></div>
-          <div class="card accent"><div class="card-b">
+          <div class="card accent" style="margin-bottom:18px"><div class="card-b">
             <h2 class="sec" style="margin-bottom:10px">המשך הטיפול בבקשה</h2>
             <p style="font-size:14.5px">${s.after}</p></div></div>
+          <div class="card cta-band"><div class="card-b" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+            <div><b style="font-size:16px;color:var(--ink-strong)">מוכנים להגיש?</b>
+              <p class="note" style="margin:2px 0 0">מילוי לוקח כ-10 דקות · ניתן לשמור טיוטה ולהמשיך מאוחר יותר.</p></div>
+            <button class="btn btn-pri btn-lg" onclick="startForm('${s.id}')">התחלת בקשה ←</button></div></div>
         </div>
         <div class="col-side">
-          <div class="card accent sticky-cta" style="margin-bottom:16px"><div class="card-b" style="text-align:center">
-            <button class="btn btn-pri btn-lg btn-block" onclick="startForm('${s.id}')">התחלת בקשה ←</button>
-            <p class="note">מילוי לוקח כ-10 דקות · ניתן לשמור טיוטה ולהמשיך מאוחר יותר.</p></div></div>
           <div class="card accent"><div class="card-b">
             <b style="font-size:14px">מסמכים נדרשים</b>
             ${s.docs.map(d=>`<div class="lrow" style="padding:9px 0;border-color:#eef0f3"><span>${UI.icon("clip",18)}</span><div class="info"><div class="nm" style="font-size:13.5px">${d}</div></div></div>`).join('')}
@@ -144,16 +145,15 @@ window.CITIZEN = (function(){
     const main = `
       ${UI.crumb([{t:'מערכת מצטינים'},{t:disc==='dance'?'מועמדות רקדן מצטיין':'מועמדות מוזיקאי מצטיין'},{t:f.reqId,strong:true}])}
       <div class="page-head"><div class="formhead"><div class="emb">${UI.icon(disc==='dance'?"award":"music",24)}</div>
-        <div class="ttl"><b>${fTitle}</b><span class="org">${f.org}</span>
+        <div class="ttl"><b>${fTitle}</b>
+          <span class="org">${f.org} ${UI.statusBadge('wait','השלמת פרטים')}</span>
           <div class="rid">מספר בקשה: <span class="bdi">${f.reqId}</span></div></div></div>
-        ${UI.statusBadge('wait','השלמת פרטים')}</div>
-      <div class="sub" style="margin:10px 0 18px">${subtitles[step]||''}</div>
-      <div class="formtools">
-        <button onclick="toast('מענה ותמיכה — אב-טיפוס')">${UI.icon("help",16)} מענה ותמיכה</button>
-        <button onclick="toast('קבצים שצירפתי — אב-טיפוס')">${UI.icon("clip",18)} קבצים שצירפתי</button>
-        <button onclick="toast('הטופס שוכפל — אב-טיפוס')">${UI.icon("doc",16)} שכפול טופס</button></div>
+        <div class="formtools">
+          <button onclick="toast('מענה ותמיכה — אב-טיפוס')">${UI.icon("help",16)} מענה ותמיכה</button>
+          <button onclick="toast('קבצים שצירפתי — אב-טיפוס')">${UI.icon("clip",18)} קבצים שצירפתי</button>
+          <button onclick="toast('הטופס שוכפל — אב-טיפוס')">${UI.icon("doc",16)} שכפול טופס</button></div></div>
+      <div class="sub" style="margin:10px 0 20px">${subtitles[step]||''}</div>
       ${UI.stepper(f.steps, step, {clickable:true})}
-      ${UI.progress(step, f.steps.length)}
       ${isComplete?`<div class="note-box"><span class="ico">${UI.icon("alert",20)}</span><div><b>הערת המשרד (16.06):</b> נא להעלות <b>תעודת זהות (שני צדדים)</b>. שאר השדות בשלב זה נשמרו.</div></div>`:''}
       <div class="card"><div class="card-b">
         <div class="req-note">שדות המסומנים בכוכבית (<span class="req">*</span>) הם שדות חובה</div>${stepBody}</div></div>
