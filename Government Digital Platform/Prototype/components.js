@@ -1,0 +1,265 @@
+/* ============================================================
+   Shared Components + Icon System (SVG, ללא אימוג'ים)
+   נאמן ל-gov.il / IGDS · מקצועי
+   ============================================================ */
+window.UI = (function(){
+
+  /* ---- Icon set (line, currentColor, 24 grid) ---- */
+  const I = {
+    home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/>',
+    file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
+    plus:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+    mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6"/>',
+    help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-1.4 1-1.4 1.9v.3"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/>',
+    bell:'<path d="M18 8a6 6 0 1 0-12 0c0 6-3 7-3 7h18s-3-1-3-7"/><path d="M10.5 20a2 2 0 0 0 3 0"/>',
+    search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    download:'<path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/>',
+    refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v5h-5"/>',
+    filter:'<path d="M3 5h18l-7 8v6l-4-2v-4z"/>',
+    sliders:'<path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/>',
+    edit:'<path d="M4 20h4l10-10-4-4L4 16z"/><path d="m14 6 4 4"/>',
+    more:'<circle cx="5" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="19" cy="12" r="1.4" fill="currentColor"/>',
+    upload:'<path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/>',
+    clip:'<path d="M20 11.5 11.5 20a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9 12.5a1.6 1.6 0 0 1-2.3-2.3l7.3-7.3"/>',
+    doc:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+    check:'<path d="M5 12.5 10 17l9-10"/>',
+    checkc:'<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+    alert:'<path d="M12 4 2.5 20h19z"/><path d="M12 10v4"/><circle cx="12" cy="17.3" r="0.6" fill="currentColor"/>',
+    info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r="0.7" fill="currentColor"/>',
+    lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L20 13l1 4v3a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1"/>',
+    calendar:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/>',
+    chevdown:'<path d="m6 9 6 6 6-6"/>',
+    arrowl:'<path d="M14 6 8 12l6 6"/>',
+    send:'<path d="M21 4 3 11l7 2 2 7z"/><path d="M21 4 12 13"/>',
+    save:'<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/>',
+    trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+    menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+    spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+    wrench:'<path d="M14.5 6a4 4 0 0 0-5.3 5l-5.4 5.4 2.8 2.8 5.4-5.4a4 4 0 0 0 5-5.3l-2.4 2.4-2.1-2.1z"/>',
+    inbox:'<path d="M4 13l2.5-8h11L20 13v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>',
+    shield:'<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/>',
+    x:'<path d="m6 6 12 12M18 6 6 18"/>',
+    award:'<circle cx="12" cy="9" r="5"/><path d="m8.5 13.5-1.5 7 5-3 5 3-1.5-7"/>',
+    book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 0-3 3z"/><path d="M5 20a3 3 0 0 1 3-3h11"/>',
+    music:'<path d="M9 18V6l11-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+    flag:'<path d="M5 21V4M5 4h12l-2 4 2 4H5"/>',
+    grid:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+    settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M5 5l2 2M17 17l2 2M2 12h3M19 12h3M5 19l2-2M17 7l2-2"/>',
+    list:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/>',
+    eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12"/><circle cx="12" cy="12" r="3"/>',
+    bolt:'<path d="M13 3 4 14h6l-1 7 9-11h-6z"/>',
+    menorah:'<path d="M4.6 6v2.4M7.1 6v2.4M9.6 6v2.4M12 6v2.4M14.4 6v2.4M16.9 6v2.4M19.4 6v2.4"/><path d="M9.6 8.4q2.4 4.4 4.8 0"/><path d="M7.1 8.4q4.9 6.4 9.8 0"/><path d="M4.6 8.4q7.4 8.6 14.8 0"/><path d="M12 8.4V17"/><path d="M9.2 17h5.6M12 17v2.4M9.4 19.4h5.2"/>',
+  };
+  function icon(name, size){
+    const p = I[name]; if(!p) return '';
+    const s = size||20;
+    return `<svg class="ic-svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+  }
+
+  /* ---- ministry colorful-star logo (SVG) ---- */
+  function ministryLogo(size){
+    const s=size||40;
+    const cols=['#E0342B','#F08A22','#F4C430','#4CA63C','#2C7BD0','#7E3DA3'];
+    const petals=cols.map((c,i)=>`<path d="M20 20 C14 13 15 5 20 3 C25 5 26 13 20 20 Z" fill="${c}" transform="rotate(${i*60} 20 20)"/>`).join('');
+    return `<svg width="${s}" height="${s}" viewBox="0 0 40 40" role="img" aria-label="לוגו משרד התרבות והספורט">${petals}<circle cx="20" cy="20" r="2.7" fill="#fff"/></svg>`;
+  }
+
+  /* ---- header pieces ---- */
+  function emblem(sub){
+    return `<button class="brand-lock" onclick="goLanding()" title="פורטל שירותים ממשלתי — דף הבית">
+      <span class="emblem ministry">${ministryLogo(38)}</span>
+      <span class="bl-div"></span>
+      <span class="bl-tx"><span class="wm">משרד התרבות והספורט</span><span class="wm-sub">${sub||'משרד החדשנות, המדע והטכנולוגיה'}</span></span>
+    </button>`;
+  }
+  function iconbtn(name,title,onclick,dot){
+    return `<button class="iconbtn" title="${title}" aria-label="${title}" ${onclick?`onclick="${onclick}"`:''}>${icon(name,19)}${dot?`<span class="dot">${dot}</span>`:''}</button>`;
+  }
+  function userPill(name,sub,onclick){
+    return `<button class="userpill" onclick="${onclick||''}"><span class="ava">${name[0]}</span>
+      <span class="up-tx"><span>${name}</span><span class="sub">${sub}</span></span>${icon('chevdown',14)}</button>`;
+  }
+
+  function barCitizen(){
+    return `<header class="govbar light"><div class="left">
+        <button class="hamburger" aria-label="תפריט" onclick="toggleMenu()">${icon('menu',22)}</button>
+        ${emblem()}</div>
+      <div class="right">
+        <div class="hdr-search">${icon('search',18)}<input placeholder="חיפוש שירות או מידע" aria-label="חיפוש שירות או מידע" onkeydown="goSearch(event,this.value)"></div>
+        <button class="iconbtn" title="נגישות" aria-label="הגדרות נגישות" onclick="toast('סרגל נגישות — אב-טיפוס')"><span style="font-weight:700;font-size:16px">א</span></button>
+        <button class="iconbtn lang" title="שפה: English" aria-label="שינוי שפה" onclick="toast('English — אב-טיפוס')">${icon('globe',18)}<span>עברית</span></button>
+        ${iconbtn('bell','הודעות',"nav('notifications')",2)}
+        ${userPill('עופר ברוידא','אזור אישי',"nav('profile')")}
+      </div></header>`;
+  }
+  function barGateway(){
+    return `<header class="govbar dark"><div class="left">${emblem('מערכת ניהול הבקשות')}</div>
+      <div class="right">${userPill('רינת אדרי','יציאה','goLanding()')}</div></header>`;
+  }
+  function barOps(system){
+    return `<header class="govbar dark"><div class="left">
+        <button class="applauncher" title="בחירת מערכת" aria-label="בחירת מערכת" onclick="nav('gateway')">${icon('grid',22)}</button>
+        ${emblem('מערכת ניהול הבקשות')}
+        <div class="ctx">${system}<span class="sw" onclick="nav('gateway')">תת מערכת ${icon('chevdown',13)}</span></div></div>
+      <div class="right">
+        <button class="iconbtn" title="נגישות" aria-label="הגדרות נגישות" onclick="toast('סרגל נגישות — אב-טיפוס')"><span style="font-weight:700;font-size:16px">א</span></button>
+        ${iconbtn('bell','הודעות',"nav('requests')",5)}
+        ${userPill('רינת אדרי','פקיד מטפל','goLanding()')}
+      </div></header>`;
+  }
+
+  /* ---- Landing / portal entry (מסך פתיחה לשני סוגי המשתמשים) ---- */
+  function landing(){
+    return `<div class="landing">
+      <div class="landing-top">
+        <span class="brand-lock" style="cursor:default">
+          <span class="emblem ministry">${ministryLogo(36)}</span>
+          <span class="bl-div" style="background:var(--line)"></span>
+          <span class="bl-tx"><span class="wm" style="color:var(--ink-strong)">משרד התרבות והספורט</span>
+            <span class="wm-sub">משרד החדשנות, המדע והטכנולוגיה</span></span>
+        </span>
+        <div class="muted" style="display:flex;align-items:center;gap:8px;font-size:13.5px">${icon('shield',16)} gov.il</div>
+      </div>
+      <div class="landing-mid">
+        <div class="emblem-lg">${ministryLogo(64)}</div>
+        <div class="kicker">מדינת ישראל</div>
+        <h1>פורטל שירותים ממשלתי אחיד</h1>
+        <p class="lead">מערכת אחת, חוויה אחת — להגשת בקשות ולניהולן. בחרו את נקודת הכניסה המתאימה לכם.</p>
+        <div class="portal-cards">
+          <button class="portal-card" onclick="enterProduct('c')">
+            <span class="pc-tag">משתמש קצה</span>
+            <div class="pc-ic">${icon('user',28)}</div>
+            <h2>אזור אישי לאזרח</h2>
+            <p>הגשת בקשות לשירותי המשרד, מעקב אחר סטטוס וניהול הפניות שלכם — במקום אחד.</p>
+            <span class="pc-go">כניסה לאזור האישי ${icon('arrowl',18)}</span>
+          </button>
+          <button class="portal-card ops" onclick="enterProduct('o')">
+            <span class="pc-tag">עובדי המשרד</span>
+            <div class="pc-ic">${icon('grid',28)}</div>
+            <h2>מערכת ניהול הבקשות</h2>
+            <p>ניהול וטיפול בבקשות, תורי עבודה והכרעות — לפקידים ולמנהלי המערכות.</p>
+            <span class="pc-go">כניסה למערכת ${icon('arrowl',18)}</span>
+          </button>
+        </div>
+      </div>
+      ${govFooter()}
+    </div>`;
+  }
+
+  /* ---- Design index (מפת מסכים) — לצפייה בכל המסכים והמצבים ---- */
+  function designMap(){
+    const grp = (title, items)=>`<div class="dm-grp"><h3>${title}</h3><div class="dm-list">${items.map(i=>`<button class="dm-item" onclick="${i.go}">${icon(i.ic||'file',18)}<span>${i.t}</span>${icon('arrowl',15)}</button>`).join('')}</div></div>`;
+    const cit = [
+      {t:'הזדהות', ic:'shield', go:"goScreen('c','login')"},
+      {t:'אזור אישי', ic:'home', go:"goScreen('c','home')"},
+      {t:'קטלוג שירותים', ic:'list', go:"goScreen('c','services')"},
+      {t:'דף שירות', ic:'file', go:"goScreen('c','service','music')"},
+      {t:'טופס מועמדות', ic:'edit', go:"goScreen('c','apply')"},
+      {t:'מעקב בקשה', ic:'clock', go:"goScreen('c','track','M-2026-0042')"},
+      {t:'הודעות', ic:'mail', go:"goScreen('c','notifications')"},
+      {t:'פרטים אישיים', ic:'user', go:"goScreen('c','profile')"},
+      {t:'הגשה בהצלחה', ic:'checkc', go:"goScreen('c','success')"},
+    ];
+    const citStates = [
+      {t:'תחזוקה', ic:'wrench', go:"goState('c','maintenance')"},
+      {t:'נעול / נדרש כרטיס חכם', ic:'lock', go:"goState('c','locked')"},
+      {t:'שגיאה', ic:'alert', go:"goState('c','error')"},
+      {t:'מצב ריק', ic:'inbox', go:"goState('c','empty')"},
+    ];
+    const ops = [
+      {t:'כניסת עובד', ic:'shield', go:"goScreen('o','login')"},
+      {t:'בחירת מערכת', ic:'grid', go:"goScreen('o','gateway')"},
+      {t:'רשימת בקשות', ic:'list', go:"goScreen('o','requests')"},
+      {t:'טיפול בבקשה', ic:'edit', go:"goScreen('o','case','M-2026-0042')"},
+      {t:'הכרעה', ic:'checkc', go:"goScreen('o','decision','M-2026-0042')"},
+      {t:'ועדות ובחינות', ic:'award', go:"goScreen('o','committees')"},
+      {t:'מצבי מערכת', ic:'settings', go:"goScreen('o','states')"},
+    ];
+    return `<div class="landing"><div class="landing-top">
+        <span class="brand-lock" style="cursor:pointer" onclick="goLanding()"><span class="emblem" style="color:var(--navy)">${icon('menorah',32)}</span>
+          <span class="bl-div" style="background:var(--line)"></span>
+          <span class="bl-tx"><span class="wm" style="color:var(--ink-strong)">פורטל שירותים ממשלתי</span><span class="wm-sub">מפת מסכים · אב-טיפוס</span></span></span>
+        <button class="txtbtn" onclick="goLanding()">חזרה למסך הפתיחה ←</button>
+      </div>
+      <div class="dm-wrap">
+        <h1>מפת מסכים — אב-טיפוס</h1>
+        <p class="dm-lead">אינדקס לצפייה בכל המסכים והמצבים בשני המוצרים (לסקירת עיצוב).</p>
+        ${grp('Citizen Portal · משתמש קצה', cit)}
+        ${grp('Citizen · מצבי מערכת', citStates)}
+        ${grp('Operations · ניהול בקשות', ops)}
+      </div>${govFooter()}</div>`;
+  }
+
+  function side(groups){
+    const body = groups.map(g=>{
+      const head = g.g?`<div class="grp">${g.g}</div>`:'';
+      const items = g.items.map(i=>`
+        <button class="nav ${i.on?'on':''}" onclick="nav('${i.screen}')" ${i.on?'aria-current="page"':''}>
+          <span class="ic">${icon(i.ic,20)}</span><span>${i.t}</span>${i.badge?`<span class="badge">${i.badge}</span>`:''}</button>`).join('');
+      return head+items;
+    }).join('');
+    return `<nav class="side" aria-label="ניווט">${body}<div class="foot">אב-טיפוס 0.4 · IGDS · gov.il</div></nav>`;
+  }
+
+  function statusBadge(k,label){ const s=DB.STATUS[k]||DB.STATUS.draft; return `<span class="badge-st ${s.cls}">${label||s.cat}</span>`; }
+  function crumb(parts){ return `<div class="crumb">${parts.map((p,i)=>(i>0?'<span class="sep">/</span>':'')+(p.strong?`<b>${p.t}</b>`:p.t)).join('')}</div>`; }
+  function stepper(steps,cur,opts){
+    opts=opts||{};
+    return `<div class="stepper" role="list">${steps.map((s,i)=>{
+      const cls=i<cur?'done':(i===cur?'on':'');
+      const click=opts.clickable&&i<=cur?`clickable" onclick="setStep(${i})`:'';
+      return `<div class="step ${cls} ${click}" role="listitem"><span class="c">${i<cur?icon('check',16):(i+1)}</span><span class="lbl">${s.t}</span></div>`;
+    }).join('')}</div>`;
+  }
+  function progress(cur,total){ return `<div class="progressbar"><i style="width:${Math.round(cur/(total-1)*100)}%"></i></div>`; }
+
+  function govFooter(){
+    return `<footer class="govfoot">
+      <div class="brand"><span class="fseal" style="background:#fff;padding:4px">${ministryLogo(22)}</span> פורטל שירותים ממשלתי</div>
+      <div class="lnks"><a href="#" onclick="goMap();return false">מפת מסכים</a><a href="#" onclick="return false">הצהרת נגישות</a><a href="#" onclick="return false">תנאי שימוש</a><a href="#" onclick="return false">פרטיות</a><a href="#" onclick="return false">צור קשר</a></div>
+      <div>מופעל ע״י מערכת ההזדהות הממשלתית · gov.il</div></footer>`;
+  }
+  function fab(t){ return `<button class="fab" onclick="toast('${t||'עוזר שירות'} — אב-טיפוס')">${icon('spark',18)} ${t||'עוזר שירות'}</button>`; }
+
+  /* ---- Spot illustration (gov.il style) — medallion + icon + dot motif. ניתן להחלפה בארט הלקוח ---- */
+  function art(key, iconName, opts){
+    opts=opts||{};
+    const sz = opts.size||32;
+    return `<div class="art-slot ${opts.cls||''}" data-art="${key}"${opts.h?` style="height:${opts.h}px"`:''} role="img" aria-label="${opts.alt||'איור'}">
+      <i class="art-dot a"></i><i class="art-dot b"></i><i class="art-dot c"></i>
+      <span class="art-medallion">${icon(iconName, sz)}</span></div>`;
+  }
+  /* ---- Avatar (round initials) ---- */
+  function avatar(name, size){
+    const p = (name||'').trim().split(/\s+/);
+    const init = (p[0]?p[0][0]:'') + (p[1]?p[1][0]:'');
+    const s = size||44;
+    return `<span class="avatar" style="width:${s}px;height:${s}px;font-size:${Math.round(s/2.7)}px">${init}</span>`;
+  }
+  /* ---- "בתוקף" style ok-badge ---- */
+  function badgeOk(t){ return `<span class="badge-ok">${icon('checkc',15)} ${t}</span>`; }
+
+  function shell(bar, sideHtml, mainHtml, opts){
+    opts=opts||{};
+    const cls = opts.narrow?'main narrow':'main';
+    const skip = `<a href="#main" class="skip-link">דלג לתוכן</a>`;
+    const overlay = sideHtml ? `<div class="menu-overlay" onclick="toggleMenu()"></div>` : '';
+    return skip + bar + overlay + `<div class="app-body">${sideHtml||''}<main id="main" class="${cls}" tabindex="-1">${mainHtml}</main></div>` + govFooter() + fab(opts.fab);
+  }
+  function bleed(bar, html){ return bar + html; }
+
+  return {icon, ministryLogo, emblem, iconbtn, barCitizen, barGateway, barOps, landing, designMap, side, statusBadge, crumb, stepper, progress, govFooter, fab, art, avatar, badgeOk, shell, bleed};
+})();
+
+/* ---- Toast ---- */
+let _toastT;
+function toast(msg, ok){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const el=document.createElement('div'); el.className='toast'+(ok?' ok':''); el.setAttribute('role','status');
+  el.innerHTML=`${UI.icon(ok?'checkc':'info',18)}<span>${msg}</span>`; document.body.appendChild(el);
+  clearTimeout(_toastT); _toastT=setTimeout(()=>el.remove(),2600);
+}

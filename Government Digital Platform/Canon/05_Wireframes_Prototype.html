@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פורטל שירותים ממשלתי — Wireframes / Prototype (IGDS)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap');
+:root{
+  --primary:#003E80; --tertiary:#0061A8; --secondary:#1F2937;
+  --on-surface:#111827; --surface:#FFFFFF; --surface-container:#F3F4F6;
+  --border:#D7DCE3; --muted:#6B7280;
+  --r-sm:4px; --r-md:8px; --r-lg:12px;
+  --st-draft-t:#374151;--st-draft-b:#E5E7EB; --st-sub-t:#1E40AF;--st-sub-b:#DBEAFE;
+  --st-prog-t:#0061A8;--st-prog-b:#E0EEF9; --st-wait-t:#9A3412;--st-wait-b:#FFEDD5;
+  --st-appr-t:#166534;--st-appr-b:#DCFCE7; --st-rej-t:#B91C1C;--st-rej-b:#FEE2E2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Assistant',sans-serif;background:#E9ECF1;color:var(--on-surface);font-size:16px;line-height:1.6}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:var(--r-sm)}
+button{font-family:inherit;cursor:pointer}
+.bdi{unicode-bidi:plaintext}
+
+.proto{position:sticky;top:0;z-index:200;background:#0B1220;color:#fff;padding:8px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.proto h1{font-size:13.5px;font-weight:700;opacity:.85;white-space:nowrap}
+.proto .seg{display:flex;background:rgba(255,255,255,.08);border-radius:var(--r-md);padding:3px}
+.proto .seg button{background:none;border:none;color:rgba(255,255,255,.7);font-size:13px;font-weight:700;padding:6px 14px;border-radius:6px}
+.proto .seg button.on{background:var(--tertiary);color:#fff}
+.proto .seg .tag{font-size:10px;opacity:.7;font-weight:600}
+.proto .tabs{display:flex;gap:4px;flex-wrap:wrap;margin-inline-start:auto}
+.proto .tabs button{background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.75);font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:6px;white-space:nowrap}
+.proto .tabs button.on{background:#fff;color:#0B1220}
+
+.frame{max-width:1180px;margin:18px auto;background:var(--surface);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.10);min-height:72vh}
+.appbar{background:var(--primary);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.appbar .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:15px}
+.appbar .ctx{font-size:12px;opacity:.8;font-weight:600}
+.seal{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.appbar .right{display:flex;align-items:center;gap:12px}
+.iconbtn{background:rgba(255,255,255,.12);border:none;color:#fff;width:34px;height:34px;border-radius:var(--r-md);font-size:14px;position:relative}
+.dot{position:absolute;top:-3px;inset-inline-start:-3px;width:9px;height:9px;background:#E0532E;border:2px solid var(--primary);border-radius:50%}
+.userpill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;color:#fff;font-size:13px;font-weight:700}
+.ava{width:26px;height:26px;border-radius:50%;background:var(--tertiary);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+
+.body{display:flex;min-height:calc(72vh - 56px)}
+.side{width:236px;background:var(--surface-container);border-inline-end:1px solid var(--border);padding:14px 0;flex-shrink:0}
+.side .grp{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--muted);padding:10px 20px 4px}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 20px;color:var(--secondary);font-weight:600;font-size:14px;border-inline-start:3px solid transparent}
+.nav.on{background:#fff;color:var(--primary);border-inline-start-color:var(--primary);font-weight:700}
+.nav .badge{margin-inline-start:auto;background:#E0532E;color:#fff;font-size:11px;font-weight:700;border-radius:10px;padding:0 7px}
+.main{flex:1;padding:28px;overflow:auto}
+
+.crumb{font-size:13px;color:var(--muted);margin-bottom:10px}
+.crumb b{color:var(--secondary)}
+h2.title{font-size:27px;font-weight:800;margin-bottom:4px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+.btn{border:none;border-radius:var(--r-md);padding:11px 22px;font-weight:700;font-size:14px}
+.btn-pri{background:var(--primary);color:#fff}.btn-pri:hover{background:var(--tertiary)}
+.btn-out{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-ghost{background:none;color:var(--primary);font-weight:700;border:none}
+.btn-danger{background:#fff;color:var(--st-rej-t);border:1.5px solid var(--st-rej-t)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.card-h{padding:14px 20px;border-bottom:1px solid var(--surface-container);display:flex;align-items:center;justify-content:space-between}
+.card-h b{font-size:15px}
+.link{color:var(--tertiary);font-weight:700;font-size:13px;text-decoration:underline;background:none;border:none}
+
+.badge-st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;border-radius:var(--r-sm);padding:3px 10px;white-space:nowrap}
+.st-draft{color:var(--st-draft-t);background:var(--st-draft-b)}.st-sub{color:var(--st-sub-t);background:var(--st-sub-b)}
+.st-prog{color:var(--st-prog-t);background:var(--st-prog-b)}.st-wait{color:var(--st-wait-t);background:var(--st-wait-b)}
+.st-appr{color:var(--st-appr-t);background:var(--st-appr-b)}.st-rej{color:var(--st-rej-t);background:var(--st-rej-b)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px}
+.stat .n{font-size:27px;font-weight:800}.stat .l{font-size:13px;color:var(--muted);font-weight:600}
+
+.alert{display:flex;gap:14px;align-items:center;justify-content:space-between;background:#FFF7ED;border:1.5px solid #F2A65A;border-radius:var(--r-lg);padding:16px 20px;margin-bottom:24px}
+.alert b{color:var(--st-wait-t)}.alert p{font-size:13.5px;color:#7C3A12}
+
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1.5px solid var(--border);background:#fff;color:var(--muted);border-radius:16px;padding:5px 14px;font-size:13px;font-weight:700}
+.pill.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.lrow{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--surface-container)}
+.lrow:last-child{border-bottom:none}.lrow .info{flex:1;min-width:0}
+.lrow .nm{font-weight:700;font-size:14.5px}.lrow .mt{font-size:12.5px;color:var(--muted)}
+
+/* citizen service list */
+.svc{display:flex;align-items:center;gap:16px;padding:18px 20px;border-bottom:1px solid var(--surface-container);text-align:start;width:100%;background:#fff;border:none}
+.svc:last-child{border-bottom:none}.svc:hover{background:#FAFBFD}
+.svc .ic{width:46px;height:46px;border-radius:var(--r-md);background:#E0EEF9;color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.svc .t{flex:1}.svc .t b{font-size:15.5px}.svc .t p{font-size:13px;color:var(--muted)}
+.svc .arr{color:var(--tertiary);font-weight:800}
+
+/* stepper (citizen) */
+.stepper{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);font-weight:700}
+.step .c{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;background:#fff}
+.step.done .c{background:var(--st-appr-t);border-color:var(--st-appr-t);color:#fff}
+.step.on{color:var(--primary)}.step.on .c{border-color:var(--primary);color:var(--primary)}
+.step .ln{width:18px;height:2px;background:var(--border)}
+
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;flex:1;min-width:200px}
+.field label{font-size:13px;font-weight:700;color:var(--secondary)}.field .req{color:var(--st-rej-t)}
+.field input,.field select{border:1px solid var(--border);border-radius:var(--r-md);padding:10px 14px;font-family:inherit;font-size:14px;background:#fff;color:var(--on-surface);width:100%}
+.field input[readonly]{background:var(--surface-container);color:var(--muted)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(0,62,128,.18)}
+.info-box{background:#E0EEF9;border:1px solid #9FC4E6;border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:var(--primary);margin-bottom:14px}
+.dropzone{border:2px dashed var(--border);border-radius:var(--r-md);padding:18px;text-align:center;color:var(--muted);font-size:13.5px;background:#FBFCFD}
+.filechip{display:inline-flex;align-items:center;gap:8px;background:var(--surface-container);border:1px solid var(--border);border-radius:var(--r-md);padding:7px 12px;font-size:13px;font-weight:600}
+.formfoot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--surface-container);padding-top:18px;margin-top:18px;flex-wrap:wrap;gap:10px}
+.note{font-size:13px;color:var(--muted);margin-top:6px}
+
+.tl{list-style:none;position:relative;padding-inline-start:26px}
+.tl:before{content:"";position:absolute;inset-inline-start:7px;top:6px;bottom:6px;width:2px;background:var(--border)}
+.tl li{position:relative;padding:0 0 18px 0}
+.tl li .pt{position:absolute;inset-inline-start:-26px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--border)}
+.tl li.done .pt{background:var(--st-appr-t);border-color:var(--st-appr-t)}
+.tl li.cur .pt{background:var(--primary);border-color:var(--primary);box-shadow:0 0 0 4px rgba(0,62,128,.15)}
+.tl li .nm{font-weight:700}.tl li.todo{color:var(--muted)}.tl li .dt{font-size:12px;color:var(--muted)}
+
+.tbl-tools{display:flex;align-items:center;gap:10px;margin-bottom:0;flex-wrap:wrap;padding:12px 16px}
+.tbl-tools input{border:1px solid var(--border);border-radius:var(--r-md);padding:8px 12px;font-family:inherit;font-size:13.5px;min-width:220px}
+.tbl-tools .sp{margin-inline-start:auto}
+.chip{border:1px solid var(--border);background:#fff;border-radius:var(--r-md);padding:7px 12px;font-size:13px;font-weight:600;color:var(--secondary)}
+.tblwrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;white-space:nowrap}
+thead th{background:var(--primary);color:#fff;text-align:start;padding:10px 12px;font-weight:700}
+tbody td{border-bottom:1px solid var(--surface-container);padding:9px 12px}
+tbody tr:hover{background:#FAFBFD}
+.bulkbar{background:#E0EEF9;border:1px solid #9FC4E6;border-radius:var(--r-md);padding:8px 14px;margin:12px 16px 0;font-size:13px;color:var(--primary);font-weight:600;display:flex;gap:10px;align-items:center}
+
+.empty{text-align:center;padding:36px 20px;color:var(--muted)}
+.empty .ic{font-size:34px}.empty b{display:block;color:var(--secondary);margin:8px 0;font-size:16px}
+.actionbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.muted{color:var(--muted);font-size:13px}.hidden{display:none}
+
+.login{display:flex;min-height:calc(72vh - 56px)}
+.login .art{flex:1;background:linear-gradient(135deg,#0A2B52,#0061A8);display:flex;align-items:center;justify-content:center;color:#fff;padding:30px;text-align:center}
+.login .art h3{font-size:24px;font-weight:800}.login .art p{opacity:.85;margin-top:8px}
+.login .panel{width:430px;padding:44px 36px;display:flex;flex-direction:column;justify-content:center}
+.login .panel h2{font-size:24px;font-weight:800;color:var(--primary)}
+.login .id-btn{display:flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--primary);border-radius:var(--r-md);padding:16px;font-weight:800;color:var(--primary);background:#fff;margin:18px 0 12px;font-size:16px}
+.login .alt{font-size:13px;color:var(--tertiary);text-decoration:underline;background:none;border:none}
+@media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.side{display:none}}
+</style>
+</head>
+<body>
+
+<div class="proto">
+  <h1>פורטל שירותים ממשלתי · IGDS · Wireframes</h1>
+  <div class="seg">
+    <button id="seg-c" class="on" onclick="setProduct('c')">Citizen Portal<span class="tag"> · משתמש קצה</span></button>
+    <button id="seg-o" onclick="setProduct('o')">Operations Platform<span class="tag"> · מנהלי בקשות</span></button>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div class="frame" id="frame"></div>
+
+<script>
+const screens = {
+  c: [
+    {id:'login', t:'הזדהות'},
+    {id:'home', t:'אזור אישי'},
+    {id:'services', t:'הגשת בקשה'},
+    {id:'apply', t:'טופס מועמדות'},
+    {id:'track', t:'מעקב בקשה'},
+  ],
+  o: [
+    {id:'systems', t:'בחירת מערכת'},
+    {id:'queue', t:'תור בקשות'},
+    {id:'case', t:'טיפול בבקשה'},
+    {id:'decision', t:'הכרעה'},
+  ]
+};
+let product='c', current='login';
+function setProduct(p){product=p;current=screens[p][0].id;
+  document.getElementById('seg-c').classList.toggle('on',p==='c');
+  document.getElementById('seg-o').classList.toggle('on',p==='o');
+  renderTabs();render();}
+function renderTabs(){document.getElementById('tabs').innerHTML=screens[product]
+  .map(s=>`<button class="${s.id===current?'on':''}" onclick="go('${s.id}')">${s.t}</button>`).join('');}
+function go(id){current=id;renderTabs();render();}
+
+function appbar(name,ctx,role){return `<div class="appbar">
+  <div class="brand"><div class="seal">מתס</div><div>${name}${ctx?`<div class="ctx">${ctx}</div>`:''}</div></div>
+  <div class="right"><button class="iconbtn" title="נגישות">A</button><button class="iconbtn" title="שפה">EN</button>
+  <button class="iconbtn" title="הודעות">🔔<span class="dot"></span></button>
+  <div class="userpill"><span class="ava">${role[0]}</span>${role}</div></div></div>`;}
+function side(items){return `<div class="side">${items.map(g=>`<div class="grp">${g.g}</div>`+
+  g.items.map(i=>`<div class="nav ${i.on?'on':''}">${i.ic} ${i.t}${i.b?`<span class="badge">${i.b}</span>`:''}</div>`).join('')).join('')}</div>`;}
+
+/* ───────── CITIZEN (משתמש קצה — מערכת מצטינים / הגשת בקשה) ───────── */
+const C = {
+  login: ()=>`<div class="login">
+    <div class="art"><div><h3>שלום</h3><p>כדי לשמור על המידע האישי שלך,<br>הכניסה דורשת הזדהות.</p></div></div>
+    <div class="panel"><h2>כניסה לאזור האישי</h2>
+      <p class="muted">משרד התרבות והספורט · משרד החדשנות, המדע והטכנולוגיה</p>
+      <button class="id-btn">🛡️ הזדהות לאומית</button>
+      <p class="muted">פותח ונתמך על ידי מערכת ההזדהות הממשלתית · gov.il</p>
+      <div style="margin-top:14px"><button class="alt">כניסה ללא תעודת זהות ישראלית / לקטינים ←</button></div>
+    </div></div>`,
+
+  home: ()=>`${side([
+    {g:'ניווט ראשי',items:[{ic:'🏠',t:'אזור אישי',on:1},{ic:'📋',t:'הבקשות שלי'},{ic:'✉️',t:'הודעות',b:'2'}]},
+    {g:'הפרופיל שלי',items:[{ic:'👤',t:'פרטים אישיים'},{ic:'📞',t:'צור קשר'}]},
+  ])}
+  <div class="main">
+    <h2 class="title">שלום, עופר 👋</h2>
+    <div class="sub">כניסה אחרונה: היום 09:42 · מזוהה דרך מערכת ההזדהות הממשלתית</div>
+    <div class="alert"><div><b>⚠️ בקשה ממתינה להשלמת פרטים</b>
+      <p>מועמדות "מוזיקאי מצטיין תשפ״ו" <span class="bdi">M-2026-0042</span> — נדרש לצרף תעודת זהות (שני צדדים).</p></div>
+      <button class="btn btn-pri" onclick="go('apply')">השלם עכשיו ←</button></div>
+    <div class="stats">
+      <div class="stat"><div class="n">3</div><div class="l">סה״כ בקשות</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">אושרו</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">בטיפול</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">ממתין לפעולתך</div></div>
+    </div>
+    <div class="row" style="align-items:flex-start">
+      <div class="card" style="flex:2;min-width:320px">
+        <div class="card-h"><b>📋 הבקשות שלי</b><button class="link" onclick="go('track')">לכל הבקשות</button></div>
+        <div class="lrow"><span class="badge-st st-wait">● השלמת פרטים</span><div class="info"><div class="nm">מוזיקאי מצטיין תשפ״ו</div><div class="mt"><span class="bdi">M-2026-0042</span> · עודכן 16.06.2026</div></div><button class="btn btn-pri btn-sm" onclick="go('apply')">השלם</button></div>
+        <div class="lrow"><span class="badge-st st-prog">● בטיפול</span><div class="info"><div class="nm">קרן סיוע לאמנים</div><div class="mt"><span class="bdi">M-2026-0031</span> · עודכן 05.06.2026</div></div><button class="btn btn-out btn-sm" onclick="go('track')">צפה</button></div>
+        <div class="lrow"><span class="badge-st st-appr">● אושרה</span><div class="info"><div class="nm">סקר סופרים — עדכון פרטים</div><div class="mt"><span class="bdi">M-2025-0554</span> · עודכן 20.09.2025</div></div><button class="btn btn-ghost btn-sm" onclick="go('track')">צפה</button></div>
+      </div>
+      <div class="card" style="flex:1;min-width:240px">
+        <div class="card-h"><b>➕ בקשה חדשה</b></div>
+        <div style="padding:16px"><button class="btn btn-pri" style="width:100%" onclick="go('services')">בחר שירות והתחל ←</button>
+        <p class="note">בחר את השירות הרצוי ומלא טופס מונחה צעד-אחר-צעד.</p></div>
+      </div>
+    </div>
+  </div>`,
+
+  services: ()=>`${side([
+    {g:'ניווט ראשי',items:[{ic:'🏠',t:'אזור אישי'},{ic:'📋',t:'הבקשות שלי'},{ic:'✉️',t:'הודעות',b:'2'}]},
+  ])}
+  <div class="main">
+    <div class="crumb">הגשת בקשה</div>
+    <h2 class="title">איזה שירות תרצה?</h2>
+    <div class="sub">בחר שירות כדי להתחיל טופס מונחה. כל שירות מסביר את תנאי הסף לפני שמתחילים.</div>
+    <div class="card">
+      <button class="svc" onclick="go('apply')"><span class="ic">🎼</span><div class="t"><b>מוזיקאי מצטיין — מערכת מצטינים</b><p>מועמדות לתוכנית המצטיינים · 6 שלבים · נדרשים מסמכים</p></div><span class="arr">←</span></button>
+      <button class="svc" onclick="go('apply')"><span class="ic">🎭</span><div class="t"><b>קרן סיוע לאמנים במצוקה</b><p>בקשת מענק · בדיקת זכאות לפי גיל והכנסות</p></div><span class="arr">←</span></button>
+      <button class="svc" onclick="go('apply')"><span class="ic">📚</span><div class="t"><b>סקר סופרים — עדכון פרטים</b><p>עדכון כותרים ופרטי תשלום</p></div><span class="arr">←</span></button>
+    </div>
+  </div>`,
+
+  apply: ()=>`${side([
+    {g:'ניווט ראשי',items:[{ic:'🏠',t:'אזור אישי'},{ic:'📋',t:'הבקשות שלי',on:1},{ic:'✉️',t:'הודעות',b:'2'}]},
+  ])}
+  <div class="main">
+    <div class="crumb"><b>מערכת מצטינים</b> · מועמדות מוזיקאי מצטיין · <span class="bdi">M-2026-0042</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <h2 class="title">טופס מועמדות — מוזיקאי מצטיין תשפ״ו</h2>
+      <span class="badge-st st-wait">● השלמת פרטים</span>
+    </div>
+    <div class="sub">מלא את כל השדות המסומנים בכוכבית (*) והעלה את המסמכים הנדרשים.</div>
+    <div class="stepper">
+      <div class="step done"><span class="c">✓</span>פרטים אישיים</div><span class="ln"></span>
+      <div class="step done"><span class="c">✓</span>הכשרה מקצועית</div><span class="ln"></span>
+      <div class="step on"><span class="c">3</span>הישגים ומסמכים</div><span class="ln"></span>
+      <div class="step"><span class="c">4</span>רפרטואר לבחינה</div><span class="ln"></span>
+      <div class="step"><span class="c">5</span>הנחיות</div><span class="ln"></span>
+      <div class="step"><span class="c">6</span>סיכום ואישור</div>
+    </div>
+    <div class="info-box">⚠️ הערת המשרד: נא להעלות <b>תעודת זהות (שני צדדים)</b>. שאר השדות בשלב זה נשמרו.</div>
+    <div class="card" style="padding:18px;margin-bottom:14px">
+      <div class="row">
+        <div class="field"><label>שם פרטי <span class="req">*</span></label><input value="עופר" readonly></div>
+        <div class="field"><label>שם משפחה <span class="req">*</span></label><input value="ברוידא" readonly></div>
+        <div class="field"><label>ת.ז. <span class="req">*</span></label><input value="065465884" readonly></div>
+      </div>
+      <div class="info-box">⚡ פרטי הזיהוי מולאו ממערכת ההזדהות ואינם ניתנים לעריכה.</div>
+      <div class="row">
+        <div class="field"><label>תמונת פספורט עדכנית <span class="req">*</span></label><div class="filechip">🖼️ passport.jpg · הועלה ✓</div></div>
+        <div class="field"><label>תעודת זהות (שני צדדים) <span class="req">*</span></label>
+          <div class="dropzone">📎 גרור קובץ או לחץ להעלאה · PDF עד 10MB</div>
+          <span class="note">שדה חובה — חסר מסמך.</span>
+        </div>
+      </div>
+    </div>
+    <div class="formfoot">
+      <button class="btn btn-ghost">→ שלב קודם</button>
+      <div class="actionbar" style="margin:0">
+        <span class="muted">💾 טיוטה נשמרה אוטומטית · 09:51</span>
+        <button class="btn btn-out">שמירת טיוטה</button>
+        <button class="btn btn-pri">המשך לשלב הבא ←</button>
+      </div>
+    </div>
+  </div>`,
+
+  track: ()=>`${side([
+    {g:'ניווט ראשי',items:[{ic:'🏠',t:'אזור אישי'},{ic:'📋',t:'הבקשות שלי',on:1},{ic:'✉️',t:'הודעות',b:'2'}]},
+  ])}
+  <div class="main">
+    <div class="crumb"><b>מערכת מצטינים</b> · בקשה <span class="bdi">M-2026-0042</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <h2 class="title">מוזיקאי מצטיין תשפ״ו</h2><span class="badge-st st-wait">● השלמת פרטים</span></div>
+    <div class="sub">בקשה <span class="bdi">M-2026-0042</span> · הוגשה 12.06.2026</div>
+    <div class="row" style="align-items:flex-start">
+      <div class="card" style="flex:2;min-width:320px">
+        <div class="card-h"><b>סטטוס הבקשה</b></div>
+        <div style="padding:20px 24px"><ul class="tl">
+          <li class="done"><span class="pt"></span><div class="nm">הוגשה</div><div class="dt">12.06.2026</div></li>
+          <li class="cur"><span class="pt"></span><div class="nm">בבדיקת השלמות — נדרשת פעולה</div><div class="dt">16.06.2026</div></li>
+          <li class="todo"><span class="pt"></span><div class="nm">בבחינה מקצועית</div></li>
+          <li class="todo"><span class="pt"></span><div class="nm">החלטת ועדה</div></li>
+          <li class="todo"><span class="pt"></span><div class="nm">תוצאה</div></li>
+        </ul></div>
+      </div>
+      <div class="card" style="flex:1;min-width:240px">
+        <div class="card-h"><b>פעולות</b></div>
+        <div style="padding:16px">
+          <button class="btn btn-pri" style="width:100%;margin-bottom:10px" onclick="go('apply')">השלם פרטים ←</button>
+          <button class="btn btn-out" style="width:100%">צפייה בבקשה</button>
+          <p class="note">📩 הודעה מהמשרד (16.06): נא לצרף תעודת זהות (שני צדדים).</p>
+        </div>
+      </div>
+    </div>
+  </div>`
+};
+
+/* ───────── OPERATIONS (מנהלי בקשות — מערכת הבקשות) ───────── */
+const O = {
+  systems: ()=>`${side([
+    {g:'מערכת הבקשות',items:[{ic:'🗂️',t:'בחירת מערכת',on:1},{ic:'📊',t:'דוחות'},{ic:'🔐',t:'הרשאות ומערכות'}]},
+  ])}
+  <div class="main">
+    <div class="crumb">מערכת הבקשות · בחירת מערכת לניהול</div>
+    <h2 class="title">בחר מערכת לניהול</h2>
+    <div class="sub">"מערכת הבקשות" מנהלת מספר מערכות. בחר את המערכת שברצונך לטפל בה (לפי ההרשאות שלך).</div>
+    <div class="card">
+      <button class="svc" onclick="go('queue')"><span class="ic">🏁</span><div class="t"><b>נהיגה ספורטיבית</b><p>רשות לנהיגה ספורטיבית · 21 בקשות פתוחות</p></div><span class="arr">←</span></button>
+      <button class="svc" onclick="go('queue')"><span class="ic">🎼</span><div class="t"><b>מערכת מצטינים</b><p>אגף התרבות · 8 בקשות פתוחות</p></div><span class="arr">←</span></button>
+      <button class="svc" onclick="go('queue')"><span class="ic">🎭</span><div class="t"><b>קרנות ותמיכות</b><p>אגף התרבות · 14 בקשות פתוחות</p></div><span class="arr">←</span></button>
+    </div>
+  </div>`,
+
+  queue: ()=>`${side([
+    {g:'מערכת הבקשות',items:[{ic:'🗂️',t:'בחירת מערכת'},{ic:'📥',t:'תור בקשות',on:1},{ic:'🔁',t:'תהליכים'}]},
+    {g:'ניהול',items:[{ic:'📊',t:'דוחות'},{ic:'🧩',t:'ניהול טפסים'},{ic:'🔐',t:'הרשאות ומערכות'}]},
+  ])}
+  <div class="main">
+    <div class="crumb"><b>מערכת הבקשות</b> · נהיגה ספורטיבית · תור בקשות</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <h2 class="title">ניהול בקשות — נהיגה ספורטיבית</h2>
+      <button class="btn btn-out">⬇ ייצוא CSV</button>
+    </div>
+    <div class="sub">פקיד מטפל · התור משובץ לפי מערכת ותפקיד, עם אפשרות הקצאה ידנית.</div>
+    <div class="stats">
+      <div class="stat"><div class="n">21</div><div class="l">סה״כ בתור</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">ממתין למטפל</div></div>
+      <div class="stat"><div class="n" style="color:var(--st-rej-t)">2</div><div class="l">חריגות SLA</div></div>
+      <div class="stat"><div class="n">7</div><div class="l">טופלו השבוע</div></div>
+    </div>
+    <div class="pills" style="margin-bottom:14px"><span class="pill on">כל הקטגוריות</span><span class="pill">הוגשה</span><span class="pill">בטיפול</span><span class="pill">ממתין למגיש</span><span class="pill">אושרה</span></div>
+    <div class="card">
+      <div class="tbl-tools"><input placeholder="חיפוש: שם / מס׳ בקשה / ת.ז."><span class="chip">סינון ▾</span><span class="chip">מיון ▾</span><span class="chip">בחירת עמודות ▾</span><span class="chip sp">רענון ⟳</span></div>
+      <div class="bulkbar">☑ נבחרו 2 בקשות · <button class="link">שיוך למטפל</button> · <button class="link">שינוי סטטוס</button> · <button class="link">ייצוא</button></div>
+      <div class="tblwrap" style="padding:12px 16px">
+        <table>
+          <thead><tr><th>☐</th><th>מס׳ בקשה</th><th>מגיש</th><th>ת.ז.</th><th>סוג בקשה</th><th>סטטוס</th><th>עודכן</th><th>מטפל</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>☑</td><td class="bdi">M-2026-0042</td><td>עופר ברוידא</td><td class="bdi">065465884</td><td>רישיון חדש</td><td><span class="badge-st st-sub">● הוגשה</span></td><td>16.06</td><td>—</td><td><button class="btn btn-out btn-sm" onclick="go('case')">פתח</button></td></tr>
+            <tr><td>☑</td><td class="bdi">M-2026-0039</td><td>נועה לוי</td><td class="bdi">301122334</td><td>חידוש</td><td><span class="badge-st st-prog">● בבדיקת השלמות</span></td><td>15.06</td><td>אני</td><td><button class="btn btn-out btn-sm" onclick="go('case')">פתח</button></td></tr>
+            <tr><td>☐</td><td class="bdi">M-2026-0035</td><td>אגודת הכוח</td><td class="bdi">514778221</td><td>רישום אגודה</td><td><span class="badge-st st-wait">● ממתין למגיש</span></td><td>14.06</td><td>אני</td><td><button class="btn btn-out btn-sm" onclick="go('case')">פתח</button></td></tr>
+            <tr><td>☐</td><td class="bdi">M-2026-0028</td><td>דנה כהן</td><td class="bdi">204556779</td><td>רישיון חדש</td><td><span class="badge-st st-prog">● בבחינה מקצועית</span></td><td>12.06</td><td>בודק</td><td><button class="btn btn-out btn-sm" onclick="go('case')">פתח</button></td></tr>
+            <tr><td>☐</td><td class="bdi">M-2026-0021</td><td>יוסי אברהם</td><td class="bdi">033442118</td><td>חידוש</td><td><span class="badge-st st-appr">● אושרה</span></td><td>10.06</td><td>אני</td><td><button class="btn btn-ghost btn-sm" onclick="go('case')">צפה</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`,
+
+  case: ()=>`${side([
+    {g:'מערכת הבקשות',items:[{ic:'🗂️',t:'בחירת מערכת'},{ic:'📥',t:'תור בקשות',on:1},{ic:'🔁',t:'תהליכים'}]},
+  ])}
+  <div class="main">
+    <div class="crumb"><b>נהיגה ספורטיבית</b> · תור בקשות · <span class="bdi">M-2026-0042</span></div>
+    <div class="actionbar">
+      <h2 class="title" style="margin-inline-end:auto">עופר ברוידא · רישיון חדש</h2>
+      <span class="badge-st st-sub">● הוגשה</span>
+      <button class="btn btn-out btn-sm">בקשת השלמה</button>
+      <button class="btn btn-out btn-sm">העברה לבדיקה מקצועית</button>
+      <button class="btn btn-pri btn-sm" onclick="go('decision')">להכרעה ←</button>
+    </div>
+    <div class="sub"><span class="bdi">ת.ז. 065465884</span> · נהג · הוגש 12.06.2026 · מטפל: אני</div>
+    <div class="row" style="align-items:flex-start">
+      <div class="card" style="flex:2;min-width:340px">
+        <div class="card-h"><b>נתוני הבקשה</b><button class="link">צפייה בטופס המלא של המגיש</button></div>
+        <div style="padding:16px 20px"><div class="row">
+          <div class="field"><label>שם מלא</label><input value="עופר ברוידא" readonly></div>
+          <div class="field"><label>שם הספורט</label><input value="נהיגה ספורטיבית" readonly></div>
+          <div class="field"><label>שנת לידה</label><input value="1990" readonly></div>
+          <div class="field"><label>מספר אגודה</label><input value="2031" readonly></div>
+        </div></div>
+        <div class="card-h"><b>מסמכים</b></div>
+        <div class="lrow"><span class="badge-st st-appr">● תקין</span><div class="info"><div class="nm">אישור תשלום אגרה</div></div><button class="link">צפה</button></div>
+        <div class="lrow"><span class="badge-st st-appr">● תקין</span><div class="info"><div class="nm">בדיקה גופנית</div></div><button class="link">צפה</button></div>
+        <div class="lrow"><span class="badge-st st-wait">● חסר</span><div class="info"><div class="nm">בדיקה ארגומטרית</div></div><button class="btn btn-out btn-sm">בקש מהמגיש</button></div>
+      </div>
+      <div class="card" style="flex:1;min-width:240px">
+        <div class="card-h"><b>היסטוריית תהליך</b></div>
+        <div style="padding:18px 22px"><ul class="tl">
+          <li class="done"><span class="pt"></span><div class="nm">הוגשה</div><div class="dt">12.06 · המערכת</div></li>
+          <li class="cur"><span class="pt"></span><div class="nm">בבדיקת השלמות</div><div class="dt">16.06 · אני</div></li>
+          <li class="todo"><span class="pt"></span><div class="nm">בחינה מקצועית</div></li>
+          <li class="todo"><span class="pt"></span><div class="nm">החלטה</div></li>
+        </ul></div>
+      </div>
+    </div>
+  </div>`,
+
+  decision: ()=>`${side([
+    {g:'מערכת הבקשות',items:[{ic:'🗂️',t:'בחירת מערכת'},{ic:'📥',t:'תור בקשות',on:1},{ic:'🔁',t:'תהליכים'}]},
+  ])}
+  <div class="main">
+    <div class="crumb"><b>נהיגה ספורטיבית</b> · <span class="bdi">M-2026-0042</span> · הכרעה</div>
+    <h2 class="title">הכרעה בבקשה</h2>
+    <div class="sub">עופר ברוידא · רישיון נהיגה ספורטיבית — בקשה חדשה</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-h"><b>תקציר לבדיקה</b></div>
+      <div class="lrow"><span class="badge-st st-appr">● תקין</span><div class="info"><div class="nm">כל המסמכים הוגשו ואושרו</div></div></div>
+      <div class="lrow"><span class="badge-st st-appr">● עבר</span><div class="info"><div class="nm">חוות דעת בודק מקצועי</div><div class="mt">"עומד בדרישות — ממליץ לאשר"</div></div></div>
+    </div>
+    <div class="card"><div class="card-h"><b>החלטה</b></div>
+      <div style="padding:18px 20px">
+        <div class="field"><label>נימוק החלטה <span class="req">*</span></label><input placeholder="הקלד נימוק שיוצג למגיש..."></div>
+        <div class="actionbar" style="margin-top:8px">
+          <button class="btn btn-pri">✓ אישור הבקשה</button>
+          <button class="btn btn-danger">דחייה</button>
+          <button class="btn btn-out">העברה לוועדה</button>
+        </div>
+        <p class="note">אישור/דחייה ישלחו הודעה אוטומטית למגיש ויעדכנו את האזור האישי שלו (אותה בקשה, תצוגת מגיש).</p>
+      </div>
+    </div>
+  </div>`
+};
+
+function render(){
+  const set = product==='c'?C:O;
+  const conf = product==='c'
+    ? {name:'אזור אישי · משרד התרבות והספורט', ctx:'', role:'עופר ברוידא'}
+    : {name:'מערכת הבקשות · מנהלי בקשות', ctx:'מערכת: נהיגה ספורטיבית', role:'פקיד מטפל'};
+  const inner = (current==='login') ? C.login() : `<div class="body">${set[current]()}</div>`;
+  document.getElementById('frame').innerHTML = appbar(conf.name, conf.ctx, conf.role) + inner;
+}
+renderTabs(); render();
+</script>
+</body>
+</html>
