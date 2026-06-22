@@ -149,37 +149,33 @@ window.UI = (function(){
   /* ---- סרגל אזור אישי (לאחר בחירת מערכת) — נאמן ל-Figma ---- */
   function barApplicant(minimal){
     const sys = state.sysName || 'נהיגה ספורטיבית';
-    const sub = state.sysSub || 'רישוי נהגים ספורטיביים';
     const minName = state.sysLogo==='state' ? 'משרד החדשנות, המדע והטכנולוגיה' : 'משרד התרבות והספורט';
     const brand = `<button class="brand-lock applic-brand" onclick="nav('home')" title="${minName} — דף הבית"><span class="emblem ministry no-chip">${state.sysLogo==='state'?stateLogo(40):ministryLogo(40)}</span><span class="bl-tx"><span class="wm">${minName}</span></span></button>`;
     if(minimal){
       return `<header class="govbar dark"><div class="left">
         ${brand}
-        <div class="ctx ctx-static"><span class="ctx-sys">${sys}</span><span class="ctx-sub">${sub}</span></div>
+        <div class="ctx ctx-static"><span class="ctx-sys">${sys}</span></div>
       </div>
       <div class="right">
         <span class="autosave bar-autosave" title="טיוטה נשמרה אוטומטית"><span class="as-note">טיוטה נשמרה אוטומטית ·</span>${icon('save',16)}<span class="as-time">09:51</span></span>
-        <button class="bar-exit" onclick="nav('home')" title="יציאה מהתהליך">${icon('x',18)} יציאה מהתהליך</button></div>
+        <button class="bar-exit" onclick="nav('home')" title="יציאה מהתהליך" aria-label="יציאה מהתהליך">${icon('x',18)} <span class="btn-lbl">יציאה מהתהליך</span></button></div>
       </header>`;
     }
     return `<header class="govbar dark"><div class="left">
         ${brand}
         <div class="ctx">
           <div class="subsys-wrap syswitch">
-            <button class="sw sw-combo" onclick="toggleSubsys(event)" aria-haspopup="true" aria-label="בחירת מערכת ותת-מערכת">
-              <span class="sw-stack"><span class="sw-sys">${sys}</span><span class="sw-sub">${sub}</span></span>${icon('chevdown',16)}
+            <button class="sw sw-combo" onclick="toggleSubsys(event)" aria-haspopup="true" aria-label="בחירת מערכת">
+              <span class="sw-sys">${sys}</span>${icon('chevdown',16)}
             </button>
             <div class="subsysmenu sysmenu hidden">
-              <div class="ssm-head">מערכת</div>
+              <div class="ssm-head">בחירת מערכת</div>
               ${Object.keys(SYS_MAP).map(id=>{const s=SYS_MAP[id];const cur=s.name===sys;return `<button class="um-item${cur?' on':''}" onclick="closeMenus();enterSystem('${id}')">${icon('grid',16)}<span class="um-tx">${s.name}</span>${cur?icon('check',16):''}</button>`;}).join('')}
-              <div class="um-div"></div>
-              <div class="ssm-head">תת-מערכת</div>
-              ${(state.sysSubs||[sub]).map(s=>{const cur=s===sub;return `<button class="um-item${cur?' on':''}" onclick="closeMenus();setAppSub('${s}')">${icon('list',16)}<span class="um-tx">${s}</span>${cur?icon('check',16):''}</button>`;}).join('')}
             </div>
           </div>
         </div></div>
       <div class="right">
-        <button class="bar-newreq" onclick="newRequest()">${icon('plusbare',18)} הגשת בקשה חדשה</button>
+        <button class="bar-newreq" onclick="newRequest()" aria-label="הגשת בקשה חדשה">${icon('plusbare',18)} <span class="btn-lbl">הגשת בקשה חדשה</span></button>
         ${userPill('עופר ברוידא','',[
           {label:'הבקשות שלי',icon:'home',onclick:"nav('home')"},
           {label:'הודעות',icon:'mail',onclick:"nav('notifications')"},

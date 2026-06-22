@@ -11,7 +11,7 @@ const state = {
   stateView:'maintenance',
   /* אזור אישי (רשימת בקשות) */
   appSearch:'', appType:'all', appPeriod:'all', appEmpty:false,
-  sysName:'נהיגה ספורטיבית', sysSub:'רישוי נהגים ספורטיביים', sysSubs:['רישוי נהגים ספורטיביים','רישום אגודות ומועדונים','מבחנים והסמכות'], sysImg:'assets/systems/driving.jpg', sysLogo:'culture', sysReqTypes:[{id:'music',name:'הגשת בקשה'}],
+  sysName:'נהיגה ספורטיבית', sysImg:'assets/systems/driving.jpg', sysLogo:'culture', sysReq:'music',
 };
 
 /* ברכה לפי שעה */
@@ -76,35 +76,17 @@ function closeLeaveDialog(keepPending){ const el=document.getElementById('leaveD
 function leaveSaveDraft(){ const p=_formExitPending; closeLeaveDialog(); toast('הטיוטה נשמרה',true); if(p) p(); }
 function leaveDiscard(){ const p=_formExitPending; closeLeaveDialog(); if(p) p(); }
 
-/* ---- gateway → enter selected system → אזור אישי ---- */
-const REQ_MUSIC={id:'music',name:'מוזיקאי מצטיין'}, REQ_DANCE={id:'dance',name:'רקדן מצטיין'};
+/* ---- gateway → enter selected system → אזור אישי (מערכות שטוחות, ללא תת-מערכת) ---- */
 const SYS_MAP = {
-  driving:{name:'נהיגה ספורטיבית', subs:['רישוי נהגים ספורטיביים','רישום אגודות ומועדונים','מבחנים והסמכות'], img:'assets/systems/driving.jpg', logo:'culture', empty:true,  reqTypes:[{id:'music',name:'הגשת בקשה'}]},
-  human:  {name:'מצטיינים בצה״ל',  subs:['מוזיקאים מצטיינים','רקדנים מצטיינים'],                              img:'assets/systems/excellence.png', logo:'culture', empty:false, reqTypes:[REQ_MUSIC, REQ_DANCE]},
-  excel:  {name:'מערכת מצטינים',   subs:['מוזיקאים מצטיינים','רקדנים מצטיינים','אמני במה'],                  img:'assets/systems/excel.png',   logo:'culture', empty:true,  reqTypes:[REQ_MUSIC, REQ_DANCE]},
-  funds:  {name:'סל מדע',          subs:['מענקי מחקר','מלגות מדע','תשתיות ומעבדות'],                          img:'assets/systems/funds.jpg',   logo:'state',   empty:true,  reqTypes:[{id:'music',name:'בקשת מענק'}]},
+  driving:{name:'נהיגה ספורטיבית',   img:'assets/systems/driving.jpg',    logo:'culture', empty:true,  req:'music'},
+  music:  {name:'מוזיקאים מצטיינים', img:'assets/systems/excellence.png', logo:'culture', empty:false, req:'music'},
+  dance:  {name:'רקדנים מצטיינים',   img:'assets/systems/excellence.png', logo:'culture', empty:true,  req:'dance'},
+  funds:  {name:'סל מדע',            img:'assets/systems/funds.jpg',      logo:'state',   empty:true,  req:'music'},
 };
-function enterSystem(id){ const s=SYS_MAP[id]||SYS_MAP.driving; state.sysName=s.name; state.sysSubs=s.subs; state.sysSub=s.subs[0]; state.sysImg=s.img; state.sysLogo=s.logo; state.sysReqTypes=s.reqTypes; state.appEmpty=!!s.empty; state.screen='home'; render(); window.scrollTo(0,0); }
+function enterSystem(id){ const s=SYS_MAP[id]||SYS_MAP.driving; state.sysName=s.name; state.sysImg=s.img; state.sysLogo=s.logo; state.sysReq=s.req; state.appEmpty=!!s.empty; state.screen='home'; render(); window.scrollTo(0,0); }
 
-/* הגשת בקשה חדשה — בוחר סוג בקשה אם יש יותר מאחד */
-function newRequest(){
-  const types=state.sysReqTypes||[REQ_MUSIC, REQ_DANCE];
-  if(types.length<=1){ startForm(types[0].id); return; }
-  closeReqTypeDlg();
-  const el=document.createElement('div'); el.className='modal-overlay'; el.id='reqTypeDlg';
-  el.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-labelledby="rtT">
-    <h3 id="rtT">הגשת בקשה חדשה</h3>
-    <p>בחרו את סוג הבקשה שברצונכם להגיש במערכת <b>${state.sysName||''}</b>:</p>
-    <div class="modal-acts">
-      ${types.map(t=>`<button class="btn btn-out reqtype-opt" onclick="pickReqType('${t.id}')">${UI.icon(t.id==='dance'?'award':'music',18)} <span>${t.name}</span></button>`).join('')}
-      <button class="btn btn-ghost" onclick="closeReqTypeDlg()">ביטול</button>
-    </div></div>`;
-  el.addEventListener('click',e=>{ if(e.target===el) closeReqTypeDlg(); });
-  document.body.appendChild(el);
-  const f=el.querySelector('.reqtype-opt'); if(f) f.focus();
-}
-function closeReqTypeDlg(){ const el=document.getElementById('reqTypeDlg'); if(el) el.remove(); }
-function pickReqType(id){ closeReqTypeDlg(); startForm(id); }
+/* הגשת בקשה חדשה — ישירות לטופס של המערכת הנוכחית (ללא דיאלוג) */
+function newRequest(){ startForm(state.sysReq||'music'); }
 
 /* ---- שורות/כרטיסים חוזרים בטופס (הוספה/מחיקה אמיתית) ---- */
 function _cleanClone(node){
@@ -127,7 +109,6 @@ function addRepeat(btn){
   }
 }
 function delTableRow(btn){ const tr=btn.closest('tr'); const tb=tr&&tr.parentNode; if(tr && tb && tb.querySelectorAll('tr').length>1){ tr.remove(); } else { toast('יש להשאיר לפחות שורה אחת'); } }
-function setAppSub(name){ state.sysSub=name; render(); }
 
 /* ---- אזור אישי: חיפוש / סינון / מיון + פתיחת בקשה ---- */
 function setAppSearch(v){ state.appSearch=v; render(); const inp=document.querySelector('#appSearchInput'); if(inp){ inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length); } }
@@ -167,15 +148,47 @@ function setQSearch(v){
 }
 
 /* ---- form ---- */
-function startForm(serviceId){ state.discipline=(serviceId==='dance'?'dance':'music'); state.completeMode=false; state.step=0; state.screen='apply'; render(); window.scrollTo(0,0); }
+function startForm(serviceId){ state.discipline=(serviceId==='dance'?'dance':'music'); state.completeMode=false; state.step=0; state.valBypass=false; state.screen='apply'; render(); window.scrollTo(0,0); }
 function setTrack(t){ state.musicTrack=t; render(); }
-function setStep(i){ state.step=i; render(); window.scrollTo(0,0); }
-function nextStep(){ if(state.step<DB.formDef.steps.length-1){ state.step++; render(); window.scrollTo(0,0); } }
-function prevStep(){ if(state.step>0){ state.step--; render(); window.scrollTo(0,0); } }
+function setStep(i){ state.step=i; state.valBypass=false; render(); window.scrollTo(0,0); }
+function prevStep(){ if(state.step>0){ state.step--; state.valBypass=false; render(); window.scrollTo(0,0); } }
+/* ולידציה להמחשה: לחיצה ראשונה מסמנת שדות חובה חסרים; לחיצה נוספת מדלגת ומתקדמת */
+function validateStep(noScroll){
+  const cont=document.querySelector('.form-sections'); if(!cont) return 0;
+  cont.querySelectorAll('.field.err').forEach(f=>f.classList.remove('err'));
+  cont.querySelectorAll('.check.err').forEach(c=>c.classList.remove('err'));
+  cont.querySelectorAll('.errmsg[data-auto]').forEach(e=>e.remove());
+  let errs=0, first=null;
+  const mark=f=>{ f.classList.add('err'); if(!f.querySelector('.errmsg')){ const s=document.createElement('span'); s.className='errmsg'; s.setAttribute('data-auto','1'); s.textContent='שדה חובה'; f.appendChild(s); } errs++; if(!first) first=f; };
+  cont.querySelectorAll('.field').forEach(f=>{
+    if(!f.querySelector('label .req')) return;
+    const ctrl=f.querySelector('input:not([type=checkbox]):not([type=radio]), select, textarea');
+    if(ctrl){
+      if(ctrl.readOnly) return;
+      let empty;
+      if(ctrl.tagName==='SELECT'){ const o=ctrl.options[ctrl.selectedIndex]; empty=!ctrl.value || (o && /^\s*בחר/.test(o.text)); }
+      else empty=!String(ctrl.value).trim();
+      if(empty) mark(f);
+    } else if(f.querySelector('.dropzone')) mark(f);
+  });
+  cont.querySelectorAll('label.check').forEach(l=>{ if(l.querySelector('.req')){ const cb=l.querySelector('input[type=checkbox]'); if(cb && !cb.checked){ l.classList.add('err'); errs++; if(!first) first=l; } } });
+  if(first && !noScroll) first.scrollIntoView({behavior:'smooth',block:'center'});
+  return errs;
+}
+function nextStep(){
+  if(state.step>=DB.formDef.steps.length-1) return;
+  if(!state.valBypass){
+    const errs=validateStep();
+    if(errs>0){ state.valBypass=true; toast('יש להשלים '+errs+' שדות חובה · לחיצה נוספת על "המשך" תדלג על הבדיקה (להמחשה)'); return; }
+  }
+  state.valBypass=false; state.step++; render(); window.scrollTo(0,0);
+}
 function submitForm(){
-  const dec=document.getElementById('declare');
-  if(dec && !dec.checked){ toast('יש לאשר את ההצהרה לפני ההגשה'); return; }
-  toast('הבקשה הוגשה בהצלחה', true); nav('success');
+  if(!state.valBypass){
+    const errs=validateStep();
+    if(errs>0){ state.valBypass=true; toast('יש להשלים '+errs+' שדות חובה · לחיצה נוספת על "הגשה" תדלג על הבדיקה (להמחשה)'); return; }
+  }
+  state.valBypass=false; toast('הבקשה הוגשה בהצלחה', true); nav('success');
 }
 /* חיפוש גלובלי (Hero / Header) → קטלוג שירותים */
 function goSearch(ev, val){
@@ -222,6 +235,8 @@ function render(){
   bindAutosave();
   initSignature();
   document.body.classList.toggle('formbar', state.screen==='apply');
+  /* בקשה קיימת להשלמה: המערכת מסמנת ומכווינה לשדות הנדרשים מיד עם הטעינה */
+  if(state.screen==='apply' && state.completeMode) validateStep(true);
 }
 
 /* פד חתימה אינטראקטיבי (canvas) */
@@ -283,24 +298,35 @@ function enhanceSelects(){
     const btn=document.createElement('button'); btn.type='button'; btn.className='uisel-btn';
     btn.setAttribute('aria-haspopup','listbox'); btn.setAttribute('aria-expanded','false');
     if(sel.disabled) btn.disabled=true;
+    const lab=sel.closest('.field')&&sel.closest('.field').querySelector('label');
+    if(lab){ const t=lab.textContent.replace('*','').trim(); if(t) btn.setAttribute('aria-label',t); }
+    else if(sel.getAttribute('aria-label')) btn.setAttribute('aria-label',sel.getAttribute('aria-label'));
     btn.innerHTML=`<span class="uisel-val">${cur?cur.textContent:''}</span><span class="uisel-chev">${UI.icon('chevdown',18)}</span>`;
     const menu=document.createElement('div'); menu.className='uisel-menu hidden'; menu.setAttribute('role','listbox');
-    [...sel.options].forEach((o,i)=>{
-      const oi=document.createElement('button'); oi.type='button'; oi.setAttribute('role','option');
+    const opts=[...sel.options].map((o,i)=>{
+      const oi=document.createElement('button'); oi.type='button'; oi.setAttribute('role','option'); oi.tabIndex=-1;
       oi.className='uisel-opt'+(i===sel.selectedIndex?' on':''); oi.textContent=o.textContent;
-      oi.addEventListener('click',ev=>{
-        ev.stopPropagation(); sel.value=o.value;
-        btn.querySelector('.uisel-val').textContent=o.textContent;
-        menu.querySelectorAll('.uisel-opt').forEach(x=>x.classList.remove('on')); oi.classList.add('on');
-        menu.classList.add('hidden'); btn.setAttribute('aria-expanded','false');
-        sel.dispatchEvent(new Event('change',{bubbles:true}));
-      });
-      menu.appendChild(oi);
+      oi.setAttribute('aria-selected', i===sel.selectedIndex?'true':'false');
+      oi.addEventListener('click',ev=>{ ev.stopPropagation(); choose(i); });
+      oi.addEventListener('keydown',ev=>onOptKey(ev,i));
+      menu.appendChild(oi); return oi;
     });
-    btn.addEventListener('click',ev=>{
-      ev.stopPropagation(); const willOpen=menu.classList.contains('hidden'); closeMenus();
-      if(willOpen){ menu.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); }
-    });
+    function choose(i){ const o=sel.options[i]; sel.value=o.value; btn.querySelector('.uisel-val').textContent=o.textContent;
+      opts.forEach((x,j)=>{ x.classList.toggle('on',j===i); x.setAttribute('aria-selected', j===i?'true':'false'); });
+      close(); sel.dispatchEvent(new Event('change',{bubbles:true})); }
+    function open(){ closeMenus(); menu.classList.remove('hidden'); btn.setAttribute('aria-expanded','true'); (opts.find(x=>x.classList.contains('on'))||opts[0]||{focus(){}}).focus(); }
+    function close(focusBtn){ menu.classList.add('hidden'); btn.setAttribute('aria-expanded','false'); if(focusBtn!==false) btn.focus(); }
+    function onOptKey(ev,i){
+      if(ev.key==='ArrowDown'){ ev.preventDefault(); (opts[i+1]||opts[0]).focus(); }
+      else if(ev.key==='ArrowUp'){ ev.preventDefault(); (opts[i-1]||opts[opts.length-1]).focus(); }
+      else if(ev.key==='Home'){ ev.preventDefault(); opts[0].focus(); }
+      else if(ev.key==='End'){ ev.preventDefault(); opts[opts.length-1].focus(); }
+      else if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); choose(i); }
+      else if(ev.key==='Escape'){ ev.preventDefault(); close(); }
+      else if(ev.key==='Tab'){ close(false); }
+    }
+    btn.addEventListener('click',ev=>{ ev.stopPropagation(); if(menu.classList.contains('hidden')) open(); else close(false); });
+    btn.addEventListener('keydown',ev=>{ if(ev.key==='ArrowDown'||ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); open(); } else if(ev.key==='Escape'){ close(false); } });
     sel.style.display='none';
     sel.parentNode.insertBefore(wrap, sel.nextSibling);
     wrap.appendChild(btn); wrap.appendChild(menu);
@@ -312,6 +338,7 @@ function associateLabels(){
   document.querySelectorAll('#app .field').forEach(f=>{
     const lab=f.querySelector('label'); const inp=f.querySelector('input,select,textarea');
     if(lab&&inp&&!inp.id){ const id='fld'+(++lc); inp.id=id; lab.htmlFor=id; }
+    if(inp && lab && lab.querySelector('.req')) inp.setAttribute('aria-required','true');
   });
   document.querySelectorAll('#app table.form-table').forEach(t=>{
     const ths=[...t.querySelectorAll('thead th')].map(h=>h.textContent.trim());

@@ -14,7 +14,7 @@
   --ink:#0C3058;           /* טקסט גוף (navy) */
   --ink-strong:#0B3668;    /* כותרות */
   --ink-soft:#54688A;      /* טקסט משני */
-  --muted:#6A7790;
+  --muted:#566580;
   --line:#E4E9F2;          /* גבולות */
   --line-2:#CFD8E6;
   --surface:#FFFFFF;
@@ -569,6 +569,10 @@ table.dt tbody tr:hover{background:var(--blue-l2)}
   background-repeat:no-repeat;background-position:left 14px center;background-size:16px;padding-left:42px}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:var(--ring)}
 .field.err input,.field.err select{border-color:var(--danger);box-shadow:0 0 0 3px rgba(194,36,27,.14)}
+.field.err .uisel-btn{border-color:var(--danger);box-shadow:0 0 0 3px rgba(194,36,27,.14)}
+.field.err .dropzone{border-color:var(--danger);background:rgba(194,36,27,.04)}
+.check.err{color:var(--danger)}
+.check.err input{outline:2px solid var(--danger);outline-offset:2px}
 .field .errmsg{font-size:13px;color:var(--danger);font-weight:500;display:none}
 .field.err .errmsg{display:block}
 .field .ok-tag{font-size:12.5px;color:var(--ok);font-weight:600}
@@ -742,6 +746,21 @@ body.formbar{overflow-x:clip}
 .menu-overlay{display:none;position:fixed;inset:0;background:rgba(11,46,92,.45);z-index:45}
 @media(min-width:981px){.sticky-cta{position:sticky;top:84px}}
 
+/* ===== סרגל אזור-אישי במובייל: צמצום לאלמנטים חיוניים ===== */
+@media(max-width:680px){
+  .govbar{padding:0 12px;gap:8px}
+  .govbar .left{gap:8px;min-width:0;flex:1}
+  .applic-brand .bl-tx{display:none}              /* רק סמל המשרד */
+  .govbar .ctx{padding-inline-start:10px;margin-inline-start:4px;min-width:0}
+  .sw-combo .sw-sys,.ctx-static .ctx-sys{max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block}
+  .bar-newreq .btn-lbl{display:none}               /* כפתור אייקון בלבד */
+  .bar-newreq{padding:9px 11px}
+  .bar-exit .btn-lbl{display:none}
+  .bar-exit{padding:8px 11px}
+  .userpill .up-tx{display:none}                   /* אווטאר + חץ בלבד */
+  .userpill{padding:0 6px;gap:4px}
+  .bar-autosave .as-note{display:none}
+}
 @media(max-width:980px){
   .hamburger{display:flex}
   .hdr-search{display:none}
@@ -780,7 +799,7 @@ body.formbar{overflow-x:clip}
    ============================================================ */
 .signin{flex:1;display:flex;flex-direction:column;min-height:100vh;position:relative;background:var(--bg)}
 .signin::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:url('assets/signin-bg.png') no-repeat bottom center;background-size:cover}
+  background:url('assets/signin-bg.png?v=2') no-repeat bottom center;background-size:cover}
 .signin-top{display:flex;justify-content:flex-start;padding:24px 40px;position:relative;z-index:2}
 .ministries{display:flex;align-items:center;gap:30px}
 .ministries .min-logo{height:52px;width:auto;display:block}

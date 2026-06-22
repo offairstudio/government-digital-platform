@@ -12,8 +12,8 @@ window.OPS = (function(){
   function gateway(){
     const cards = [
       {id:'driving', logo:'נ', name:'נהיגה ספורטיבית', org:'רשות לנהיגה ספורטיבית', tag:'רשות', img:'assets/systems/driving.jpg', state:'active'},
-      {id:'human',   logo:'מ', name:'מצטיינים בצה״ל',  org:'אגף מצטיינים · משרד התרבות והספורט', tag:'אגף', img:'assets/systems/excellence.png', state:'active'},
-      {id:'excel',   logo:'מ', name:'מערכת מצטינים',   org:'אגף התרבות', tag:'אגף', img:'assets/systems/excel.png', state:'maint'},
+      {id:'music',   logo:'מ', name:'מוזיקאים מצטיינים', org:'אגף מצטיינים · משרד התרבות והספורט', tag:'אגף', img:'assets/systems/excellence.png', state:'active'},
+      {id:'dance',   logo:'ר', name:'רקדנים מצטיינים',  org:'אגף מצטיינים · משרד התרבות והספורט', tag:'אגף', img:'assets/systems/excellence.png', state:'active'},
       {id:'funds',   logo:'ס', name:'סל מדע',          org:'משרד החדשנות, המדע והטכנולוגיה', tag:'מטה', img:'assets/systems/funds.jpg', inv:true, state:'lock'},
     ];
     const card = c=>{

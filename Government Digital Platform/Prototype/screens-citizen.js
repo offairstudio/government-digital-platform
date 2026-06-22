@@ -574,7 +574,7 @@ window.CITIZEN = (function(){
       <p>בקשתך נקלטה במערכת. מספר הבקשה <b class="bdi">M-2026-0042</b>. נשלח אישור לדוא״ל שלך, וניתן לעקוב אחר הסטטוס באזור האישי.</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
         <button class="btn btn-pri btn-lg" onclick="nav('track','M-2026-0042')">למעקב אחר הבקשה</button>
-        <button class="btn btn-out btn-lg" onclick="nav('home')">חזרה לאזור האישי</button>
+        <button class="btn btn-out btn-lg" onclick="nav('home')">חזרה לבקשות שלי</button>
       </div>
       <div class="card" style="margin-top:30px;max-width:540px;text-align:start;width:100%"><div class="card-b">
         <b style="color:var(--ink-strong)">מה קורה עכשיו?</b>
@@ -591,9 +591,9 @@ window.CITIZEN = (function(){
   function cstate(){
     const which = state.stateView || 'maintenance';
     const v = {
-      maintenance:{ic:'warn',icon:'wrench',h:'המערכת מתעדכנת',p:'אנו מבצעים תחזוקה מתוכננת לשיפור השירות. השירות יחזור לפעילות בקרוב — נשמח לראותך שוב בעוד זמן קצר.',a:'רענון העמוד',a2:'חזרה לאזור האישי'},
+      maintenance:{ic:'warn',icon:'wrench',h:'המערכת מתעדכנת',p:'אנו מבצעים תחזוקה מתוכננת לשיפור השירות. השירות יחזור לפעילות בקרוב — נשמח לראותך שוב בעוד זמן קצר.',a:'רענון העמוד',a2:'חזרה לבקשות שלי'},
       locked:{ic:'lock',icon:'lock',h:'נדרשת הזדהות מאובטחת',p:'הגישה לשירות זה דורשת הזדהות באמצעות כרטיס חכם. כדי להמשיך, הזדהו עם כרטיס חכם או פנו למוקד התמיכה בטלפון *6552.',a:'הזדהות עם כרטיס חכם',a2:'פנייה לתמיכה'},
-      error:{ic:'warn',icon:'alert',h:'אירעה שגיאה',p:'לא הצלחנו להשלים את הפעולה. נסו שוב בעוד מספר רגעים. אם התקלה חוזרת, פנו למוקד התמיכה ונשמח לסייע.',a:'נסו שוב',a2:'חזרה לאזור האישי'},
+      error:{ic:'warn',icon:'alert',h:'אירעה שגיאה',p:'לא הצלחנו להשלים את הפעולה. נסו שוב בעוד מספר רגעים. אם התקלה חוזרת, פנו למוקד התמיכה ונשמח לסייע.',a:'נסו שוב',a2:'חזרה לבקשות שלי'},
       empty:{ic:'blue',icon:'inbox',h:'עדיין אין בקשות',p:'לא הגשת בקשות עד כה. בחרו שירות כדי להתחיל בקשה חדשה — המערכת תלווה אתכם צעד אחר צעד.',a:'בחירת שירות והתחלה',a2:''},
     }[which];
     const main = `<div class="state-page">
