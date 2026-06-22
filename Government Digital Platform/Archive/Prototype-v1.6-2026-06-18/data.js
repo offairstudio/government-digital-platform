@@ -26,35 +26,6 @@ window.DB = (function(){
      status:'appr', label:'אושרה', updated:'20.09.2025', submitted:'14.09.2025'},
   ];
 
-  /* ---- אזור אישי · בקשות המגיש מקובצות לפי סטטוס (Figma: Citizen / Home) ---- */
-  const appGroups = [
-    {k:'todo',     t:'בקשות לטיפול'},
-    {k:'review',   t:'בקשות בבחינה מקצועית'},
-    {k:'received', t:'בקשות שהתקבלו'},
-    {k:'approved', t:'בקשות שאושרו'},
-  ];
-  const appRequests = [
-    {group:'todo', id:'M-2026-0042', service:'מוזיקאי מצטיין תשפ״ו', icon:'music',
-     meta:'16.06.2026 · אגף התרבות', status:'wait', label:'השלמת פרטים', action:'complete',
-     type:'מצטינים', sortKey:20260616,
-     desc:'מועמדות "מוזיקאי מצטיין תשפ״ו" M-2026-0042 — נדרש לצרף תעודת זהות (שני צדדים).'},
-    {group:'review', id:'M-2026-0031', service:'קרן סיוע לאמנים', icon:'award',
-     meta:'M-2026-0031 · עודכן 05.06.2026', status:'prog', label:'בבחינה מקצועית', action:'view',
-     type:'קרנות', sortKey:20260605},
-    {group:'review', id:'M-2025-0554', service:'סקר סופרים — עדכון פרטים', icon:'music',
-     meta:'M-2025-0554 · עודכן 20.09.2025', status:'prog', label:'בבחינה מקצועית', action:'view',
-     type:'סקרים', sortKey:20250920},
-    {group:'received', id:'M-2026-0048', service:'רקדן מצטיין תשפ״ו', icon:'award',
-     meta:'M-2026-0048 · עודכן 03.06.2026', status:'sub', label:'התקבלה', action:'view',
-     type:'מצטינים', sortKey:20260603},
-    {group:'approved', id:'M-2025-0119', service:'קרן סיוע לאמנים', icon:'award',
-     meta:'M-2025-0119 · עודכן 12.02.2025', status:'appr', label:'אושרה', action:'view',
-     type:'קרנות', sortKey:20250212},
-    {group:'approved', id:'M-2024-0501', service:'סקר סופרים — עדכון פרטים', icon:'music',
-     meta:'M-2024-0501 · עודכן 28.11.2024', status:'appr', label:'אושרה', action:'view',
-     type:'סקרים', sortKey:20241128},
-  ];
-
   /* ---- קטלוג שירותים (Citizen) + דף שירות (R-1) ---- */
   const services = [
     {id:'music', icon:'music', cat:'מצטינים',
@@ -173,5 +144,5 @@ window.DB = (function(){
   };
 
   return {STATUS, citizenRequests, services, formDef, systems, queue, notifications,
-          citizenSystems, traineeRequests, requestDetail, appGroups, appRequests};
+          citizenSystems, traineeRequests, requestDetail};
 })();

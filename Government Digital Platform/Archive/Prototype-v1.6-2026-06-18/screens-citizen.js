@@ -7,162 +7,68 @@ window.CITIZEN = (function(){
   /* תפריט הצד הוסתר — הניווט עבר לסרגל העליון (פרטי משתמש + הודעות) */
   function cside(active){ return ''; }
 
-  /* ---------- 1 · הזדהות וכניסה (כניסה לפורטל) ---------- */
+  /* ---------- Login (gov.il national auth) ---------- */
   function login(){
-    const html = `<div class="signin">
-      <header class="signin-top">
-        <div class="ministries">
-          <img class="min-logo" src="assets/logos/state-lockup.svg" alt="מדינת ישראל · משרד החדשנות, המדע והטכנולוגיה">
-          <img class="min-logo" src="assets/logos/culture-lockup.svg" alt="משרד התרבות והספורט">
+    /* אייקונים רשמיים מ-login.gov.il */
+    const I_SMART = `<img src="assets/logos/smart_card.svg" alt="" style="height:46px;width:auto;display:block">`;
+    const I_BIO = `<img src="assets/logos/bio_id.svg" alt="" style="height:44px;width:auto;display:block">`;
+    const I_QUICK = `<img src="assets/logos/passkey.svg" alt="" style="height:44px;width:auto;display:block">`;
+    const html = `<div class="login"><div class="card-login">
+      <div class="lhead"><div class="seal" style="background:#fff;padding:5px">${UI.stateLogo(34)}</div>
+        <div><h2>כניסה לאזור האישי</h2><p>מדינת ישראל · פורטל שירותים ממשלתי</p></div></div>
+      <div class="lbody">
+        <div class="lmain">
+          <h3>הזדהות וכניסה</h3>
+          <p class="muted" style="font-size:13px">כדי לשמור על המידע האישי שלך, הכניסה דורשת הזדהות באמצעות מערכת ההזדהות הממשלתית.</p>
+          <button class="id-btn" onclick="nav('home')">${UI.icon("shield",20)} הזדהות לאומית</button>
+          <button class="alt-card" onclick="nav('home')" style="margin-top:2px"><span class="ic">${UI.icon("mail",18)}</span><div><div>קוד אישי לדוא״ל</div><div class="muted" style="font-size:11.5px;font-weight:600">כולל דרכון — לקטינים / ללא ת.ז ישראלית</div></div></button>
+          <p class="muted" style="font-size:12px;text-align:center;margin-top:6px">פותח ונתמך על ידי מערכת ההזדהות הממשלתית · gov.il</p>
         </div>
-      </header>
-      <div class="signin-stage">
-        <div class="signin-card">
-          <div class="sc-kicker">פורטל השירותים והבקשות · האזור האישי</div>
-          <h2>הזדהות וכניסה</h2>
-          <p>כדי לשמור על המידע האישי שלך, הכניסה דורשת הזדהות באמצעות מערכת ההזדהות הממשלתית.</p>
-          <button class="id-btn" onclick="nav('auth')">${UI.icon("shield",20)} הזדהות לאומית</button>
-          <div class="sc-byline">פותח ונתמך על ידי <img src="assets/logos/gov.svg" alt="gov.il" class="govil-mark" onerror="this.replaceWith(document.createTextNode('gov.il'))"></div>
-          <p class="sc-foot">הזדהות מאובטחת אחת לקבלת שירותים ומידע מהממשלה ומהרשויות המקומיות</p>
-        </div>
-      </div>
-    </div>`;
-    return html;
-  }
-
-  /* ---------- 2 · הזדהות לאומית (gov.il) — ספק חיצוני · Placeholder ---------- */
-  function auth(){
-    const I_SMART = `<img src="assets/logos/smart_card.svg" alt="" style="height:42px;width:auto;display:block">`;
-    const I_BIO = `<img src="assets/logos/bio_id.svg" alt="" style="height:40px;width:auto;display:block">`;
-    const I_QUICK = `<img src="assets/logos/passkey.svg" alt="" style="height:40px;width:auto;display:block">`;
-    const html = `<div class="govauth">
-      <header class="ga-bar">
-        <div class="ga-brand"><span class="ga-em">${UI.stateLogo(30)}</span><span class="ga-tx">מערכת הזדהות לאומית</span><span class="ga-flag">★ יחד ננצח ★</span></div>
-        <div class="ga-links">
-          <span class="ga-link">${UI.icon('lock',15)} כניסה בטוחה לשירותי הדיגיטל של ישראל <b>מה כדאי לבדוק?</b> ${UI.icon('chevdown',14)}</span>
-          <span class="ga-link">${UI.icon('globe',15)} עברית ${UI.icon('chevdown',13)}</span>
-          <span class="ga-link">${UI.icon('settings',15)} עזרה</span>
-        </div>
-      </header>
-      <main class="ga-main">
-        <h1 class="ga-title">הזדהות וכניסה לשירות מבוקש</h1>
-        <div class="ga-card">
-          <div class="ga-col ga-pass">
-            <h2>${UI.icon('lock',18)} כניסה עם סיסמה</h2>
-            <label class="ga-lbl">מספר זהות בן <b>9 ספרות</b> (כולל ספרת ביקורת)</label>
-            <input class="ga-inp bdi" inputmode="numeric" placeholder="_________">
-            <label class="ga-lbl">סיסמה</label>
-            <input class="ga-inp" type="password">
-            <a class="ga-forgot" href="#" onclick="return false">שכחתי סיסמה</a>
-            <button class="ga-submit" onclick="nav('gateway')">כניסה <span class="ga-sh">${UI.icon('shield',18)}</span></button>
-            <div class="ga-more">
-              <div class="ga-more-h">דרכים נוספות להזדהות</div>
-              <div class="ga-tiles">
-                <button class="ga-tile" onclick="nav('gateway')"><span class="gt-ic">${I_SMART}</span><span>כרטיס חכם</span></button>
-                <button class="ga-tile" onclick="nav('gateway')"><span class="gt-ic">${I_BIO}</span><span>תעודת זהות ביומטרית</span></button>
-                <button class="ga-tile" onclick="nav('gateway')"><span class="gt-ic">${I_QUICK}</span><span>כניסה מהירה</span></button>
-              </div>
-            </div>
-          </div>
-          <div class="ga-sep"></div>
-          <div class="ga-col ga-reg">
-            <h2>אין לך סיסמה עדיין?</h2>
-            <p>הרשמה להזדהות הלאומית תסייע לך לצרוך שירותים ממשלתיים רבים ומגוונים באמצעים דיגיטליים</p>
-            <button class="ga-regbtn" onclick="nav('gateway')">להרשמה</button>
+        <div class="lalt">
+          <h3 style="font-size:15px">דרכים נוספות להזדהות</h3>
+          <div class="auth-methods">
+            <button class="auth-tile" onclick="nav('home')"><span class="at-ic">${I_SMART}</span><span class="at-lbl">כרטיס חכם</span></button>
+            <button class="auth-tile" onclick="nav('home')"><span class="at-ic">${I_BIO}</span><span class="at-lbl">תעודת זהות ביומטרית</span></button>
+            <button class="auth-tile" onclick="nav('home')"><span class="at-ic">${I_QUICK}</span><span class="at-lbl">כניסה מהירה</span></button>
           </div>
         </div>
-        <p class="ga-note">${UI.icon('info',15)} זהו מסך הדגמה של מערכת ההזדהות הממשלתית (gov.il) — ספק חיצוני. בלחיצה על כניסה תועברו לבחירת מערכת.</p>
-      </main>
-    </div>`;
-    return html;
-  }
-
-  /* ---------- 4 · אזור אישי — הבקשות שלי (Figma: Citizen / Home) ---------- */
-  function hero(){
-    return `<div class="cit-hero apphero">
-      <div class="hero-tx">
-        <h2>${greeting()}, עופר ברוידא</h2>
-        <p>הבקשות שלך, הסטטוסים והשירותים — במקום אחד.</p>
       </div>
-      <div class="hero-art-card"><img class="hero-art-img" src="${state.sysImg||'assets/systems/driving.jpg'}" alt="${state.sysName||''}" onerror="this.style.display='none'"></div>
-    </div>`;
+      <div class="sec-foot"><span>${UI.icon("lock",18)} גישה מאובטחת · תקן אבטחה ISO-27001</span><span>gov.il</span></div>
+    </div></div>`;
+    return UI.bleed(UI.barAuth(), html) + UI.govFooter();
   }
 
-  function reqCard(r){
-    const act = r.action==='complete'
-      ? `<button class="btn btn-pri rc-act" onclick="openReq('${r.id}','complete')">השלם עכשיו</button>`
-      : `<button class="btn btn-out rc-act" onclick="openReq('${r.id}','view')">צפה</button>`;
-    return `<article class="reqcard ${r.group==='todo'?'is-todo':''}">
-      <span class="rc-ic">${UI.icon(r.icon||'file',24)}</span>
-      <div class="rc-body">
-        <div class="rc-title">${r.service}</div>
-        <div class="rc-meta">${r.meta}</div>
-        ${r.desc?`<div class="rc-desc">${r.desc}</div>`:''}
-      </div>
-      <div class="rc-side">
-        ${UI.statusBadge(r.status, r.label)}
-        ${act}
-        <button class="rc-more" title="פעולות" aria-label="פעולות" onclick="toast('פעולות בקשה — אב-טיפוס')">${UI.icon('more',22)}</button>
-      </div>
-    </article>`;
-  }
-
-  function emptyHome(){
-    const feat=(ic,t,d)=>`<div class="ae-feat"><span class="ae-feat-ic">${UI.icon(ic,20)}</span><div class="ae-feat-tx"><b>${t}</b><p>${d}</p></div></div>`;
-    const main = `${hero()}
-      <div class="app-empty">
-        <h2>עדיין לא הגשת בקשות</h2>
-        <p>זהו האזור האישי שלך במערכת. כאן יופיעו כל הבקשות שתגיש — אפשר לעקוב אחר הסטטוס, להשלים פרטים חסרים ולהמשיך טיוטות שמורות, הכול במקום אחד.</p>
-        <button class="btn btn-pri btn-lg" onclick="newRequest()">${UI.icon('plusbare',18)} הגשת בקשה חדשה</button>
-        <div class="ae-feats">
-          ${feat('list','מעקב סטטוס','עדכון על כל שלב בטיפול בבקשה')}
-          ${feat('bell','התראות','הודעה כשנדרשת השלמת פרטים')}
-          ${feat('save','שמירת טיוטות','אפשר לעצור ולהמשיך בכל זמן')}
-        </div>
-      </div>`;
-    return UI.shell(UI.barApplicant(), null, main, {appcol:true});
-  }
-
+  /* ---------- אזור אישי (my.gov.il style — מבוסס משימה, ללא Launcher) ---------- */
   function home(){
-    if(state.appEmpty) return emptyHome();
-    const q = (state.appSearch||'').trim();
-    const type = state.appType||'all';
-    const period = state.appPeriod||'all';
-    let rows = DB.appRequests.slice();
-    if(q) rows = rows.filter(r=>(r.service+' '+r.id+' '+r.meta+' '+(r.desc||'')).includes(q));
-    if(type!=='all') rows = rows.filter(r=>r.type===type);
-    if(period==='new') rows.sort((a,b)=>b.sortKey-a.sortKey);
-    if(period==='old') rows.sort((a,b)=>a.sortKey-b.sortKey);
-    const types = [...new Set(DB.appRequests.map(r=>r.type))];
-
-    const groupsHtml = DB.appGroups.map(g=>{
-      const items = rows.filter(r=>r.group===g.k);
-      if(!items.length) return '';
-      return `<section class="reqgroup">
-        <h3 class="rg-title">${g.t}</h3>
-        <div class="reqcards">${items.map(reqCard).join('')}</div></section>`;
+    const reqRows = DB.citizenRequests.map(r=>{
+      const action = r.status==='wait'
+        ? `<button class="btn btn-pri btn-sm" onclick="nav('apply')">השלם</button>`
+        : `<button class="btn btn-out btn-sm" onclick="nav('track','${r.id}')">צפה</button>`;
+      return `<div class="lrow">
+        <div class="info"><div class="nm">${r.service}</div>
+          <div class="mt"><span class="bdi">${r.id}</span> · עודכן ${r.updated}</div></div>${UI.statusBadge(r.status, r.label)}${action}</div>`;
     }).join('');
 
-    const noMatch = `<div class="empty" style="margin-top:8px"><div class="ic">${UI.icon('search',28)}</div><b>לא נמצאו בקשות</b>
-        <p>לא נמצאו בקשות התואמות את הסינון. נסו מילה אחרת או אפסו את הסינון.</p>
-        <button class="btn btn-out" onclick="setAppSearch('');setAppType('all')">איפוס סינון</button></div>`;
-
-    const main = `${hero()}
-      <div class="app-list-head"><h2>הבקשות שלי</h2></div>
-      <div class="app-filters">
-        <div class="field"><label>מילת חיפוש</label>
-          <input id="appSearchInput" placeholder="שם / מס׳ בקשה / ת.ז / סימוכין" value="${q}" oninput="setAppSearch(this.value)"></div>
-        <div class="field" style="max-width:240px"><label>סוג בקשה</label>
-          <select onchange="setAppType(this.value)"><option value="all">כל סוגי הבקשות</option>${types.map(t=>`<option value="${t}" ${type===t?'selected':''}>${t}</option>`).join('')}</select></div>
-        <div class="field" style="max-width:190px"><label>מתי עודכן</label>
-          <select onchange="setAppPeriod(this.value)">
-            <option value="all" ${period==='all'?'selected':''}>כל התקופות</option>
-            <option value="new" ${period==='new'?'selected':''}>מהחדש לישן</option>
-            <option value="old" ${period==='old'?'selected':''}>מהישן לחדש</option>
-          </select></div>
+    const main = `
+      <div class="cit-hero">
+        <div class="hero-tx">
+          <h2>${greeting()}, עופר ברוידא</h2>
+          <p>הבקשות שלך, הסטטוסים והשירותים — במקום אחד.</p>
+        </div>
       </div>
-      ${rows.length ? groupsHtml : noMatch}`;
-    return UI.shell(UI.barApplicant(), null, main, {appcol:true});
+
+      <div class="section-head"><h2>הבקשות שלי</h2></div>
+      <div class="section-sub">מעקב אחר הבקשות שהגשת. <button class="link" onclick="nav('track')">לכל הבקשות ←</button></div>
+      <div class="card" style="margin-bottom:34px">${reqRows}</div>
+
+      <div class="section-head"><h2>פעולות מהירות</h2></div>
+      <div class="section-sub">קיצורי דרך לפעולות הנפוצות.</div>
+      <div class="action-cards">
+        <button class="action-card" onclick="nav('services')">${UI.art('action-newrequest','plus',{cls:'ac-art',size:48})}<div class="ac-b"><b>הגשת בקשה חדשה</b><p>בחירת שירות והתחלת טופס מונחה</p></div></button>
+        <button class="action-card" onclick="nav('notifications')">${UI.art('action-messages','mail',{cls:'ac-art',size:48})}<div class="ac-b"><b>ההודעות שלי</b><p>עדכונים והודעות מהמשרד</p></div></button>
+        <button class="action-card" onclick="nav('profile')">${UI.art('action-profile','user',{cls:'ac-art',size:48})}<div class="ac-b"><b>הפרטים שלי</b><p>פרטים אישיים והעדפות קשר</p></div></button>
+      </div>`;
+    return UI.shell(UI.barCitizen(), cside('home'), main);
   }
 
   /* ---------- קטלוג שירותים (gov.il) ---------- */
@@ -184,7 +90,7 @@ window.CITIZEN = (function(){
       <div class="field" style="max-width:440px;margin-bottom:16px"><input id="svcSearchInput" placeholder="חיפוש שירות לפי שם או נושא" value="${q}" oninput="setSvcSearch(this.value)"></div>
       <div class="pills">${cats.map(c=>`<span class="pill ${cat===c?'on':''}" onclick="setSvcCat('${c}')">${c}</span>`).join('')}</div>
       <div class="card">${list}</div>`;
-    return UI.shell(UI.barApplicant(), cside('services'), main, {narrow:true});
+    return UI.shell(UI.barCitizen(), cside('services'), main, {narrow:true});
   }
 
   /* ---------- דף שירות (gov.il Service Page) ---------- */
@@ -224,7 +130,7 @@ window.CITIZEN = (function(){
               <a class="link" href="#" onclick="return false">יצירת קשר עם האגף</a></div></div></div>
         </div>
       </div>`;
-    return UI.shell(UI.barApplicant(), cside('services'), main);
+    return UI.shell(UI.barCitizen(), cside('services'), main);
   }
 
   /* ---------- טופס מרובה-שלבים (govforms style) ---------- */
@@ -236,24 +142,27 @@ window.CITIZEN = (function(){
     const disc = state.discipline||'music';
     const fTitle = disc==='dance' ? 'טופס מועמדות — רקדן מצטיין תשפ״ו' : f.title;
     const subtitles = ['מלא את כל השדות המסומנים בכוכבית (*) והעלה את המסמכים הנדרשים', disc==='dance'?'מלא את פרטי ההכשרה המקצועית וסגנון ההתמחות':'בחר את המסלול ומלא את פרטי ההכשרה המוזיקלית','פרט הישגים, הופעות והעלה מסמכים תומכים','רשום את הרפרטואר לבחינה'+(disc==='dance'?'':' ואת פרטי המלווים'),'קרא את ההנחיות ואשר אותן כדי להמשיך','בדוק את הסיכום, אשר את ההצהרות וחתום'];
-    const reqId = state.param || f.reqId;
     const main = `
-      ${UI.crumb([{t:'הבקשות שלי',go:"nav('home')"},{t:'מעקב הבקשה',go:"openReq('"+reqId+"','view')"},{t:disc==='dance'?'מועמדות רקדן מצטיין':'מועמדות מוזיקאי מצטיין',strong:true}])}
+      ${UI.crumb([{t:'מערכת מצטינים'},{t:disc==='dance'?'מועמדות רקדן מצטיין':'מועמדות מוזיקאי מצטיין'},{t:f.reqId,strong:true}])}
       <div class="page-head"><div class="formhead"><div class="emb">${UI.icon(disc==='dance'?"award":"music",24)}</div>
         <div class="ttl"><b>${fTitle}</b>
           <span class="org">${f.org} ${UI.statusBadge('wait','השלמת פרטים')}</span>
           <div class="rid">מספר בקשה: <span class="bdi">${f.reqId}</span></div></div></div>
-      </div>
-      <div class="stepper-wrap">${UI.stepper(f.steps, step, {clickable:true})}</div>
+        <div class="formtools">
+          <button onclick="toast('מענה ותמיכה — אב-טיפוס')">${UI.icon("help",16)} מענה ותמיכה</button>
+          <button onclick="toast('קבצים שצירפתי — אב-טיפוס')">${UI.icon("clip",18)} קבצים שצירפתי</button>
+          <button onclick="toast('הטופס שוכפל — אב-טיפוס')">${UI.icon("doc",16)} שכפול טופס</button></div></div>
+      <div class="sub" style="margin:10px 0 20px">${subtitles[step]||''}</div>
+      ${UI.stepper(f.steps, step, {clickable:true})}
       ${isComplete?`<div class="note-box"><span class="ico">${UI.icon("alert",20)}</span><div><b>הערת המשרד (16.06):</b> נא להעלות <b>תעודת זהות (שני צדדים)</b>. שאר השדות בשלב זה נשמרו.</div></div>`:''}
-      <div class="req-note">שדות המסומנים בכוכבית (<span class="req">*</span>) הם שדות חובה</div>
-      <div class="form-sections">${stepBody}</div>
+      <div class="card"><div class="card-b">
+        <div class="req-note">שדות המסומנים בכוכבית (<span class="req">*</span>) הם שדות חובה</div>${stepBody}</div></div>
       <div class="formfoot">
         <button class="btn btn-ghost" onclick="prevStep()" ${step===0?'disabled':''}>→ שלב קודם</button>
-        <div class="acts"><span class="autosave" title="טיוטה נשמרה אוטומטית"><span class="as-note">טיוטה נשמרה אוטומטית ·</span>${UI.icon("save",18)}<span class="as-time">09:51</span></span>
+        <div class="acts"><span class="autosave">${UI.icon("save",18)} טיוטה נשמרה אוטומטית · 09:51</span>
           <button class="btn btn-out" onclick="toast('טיוטה נשמרה',true)">שמירת טיוטה</button>
           ${step<f.steps.length-1?`<button class="btn btn-pri" onclick="nextStep()">המשך לשלב הבא ←</button>`:`<button class="btn btn-pri" onclick="submitForm()">${UI.icon("check",16)} הגשת הבקשה</button>`}</div></div>`;
-    return UI.shell(UI.barApplicant(true), null, main, {nofab:true, formpage:true});
+    return UI.shell(UI.barCitizen(), cside('track'), main);
   }
 
   function renderStep(k, isComplete){
@@ -333,15 +242,15 @@ window.CITIZEN = (function(){
           <div class="field"><label><span class="req">*</span> שם המורה/ים</label><input></div>
           <div class="field"><label>טלפון המורה</label><input class="bdi"></div>
           <div class="field"><label>דוא״ל המורה</label><input></div></div></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף מוסד נוסף</button>`;
+      <button class="btn-add" onclick="toast('הוספת מוסד — אב-טיפוס')">${UI.icon('plus',16)} הוסף מוסד נוסף</button>`;
     if(k==='training'){ const tr=state.musicTrack||'classical';
-      const tcard=(id,ic,t,p)=>`<div class="track-card ${tr===id?'on':''}" onclick="setTrack('${id}')"><span class="tc-em">${UI.icon(ic,32)}</span><b>${t}</b><p>${p}</p></div>`;
+      const tcard=(id,em,t,p)=>`<div class="track-card ${tr===id?'on':''}" onclick="setTrack('${id}')"><div class="tc-em">${em}</div><b>${t}</b><p>${p}</p></div>`;
       return `
       <h3 class="form-sec">${UI.icon('music',18)} בחירת מסלול מוזיקלי</h3>
       <div class="track-cards">
-        ${tcard('classical','piano','נגינה – תחום קלאסי','כלי מיתר, כלי נשיפה, כלי הקשה, פסנתר')}
-        ${tcard('jazz','disc','נגינה ושירה – ג׳אז','Be-bop · Ballads · Latin · Modern Jazz')}
-        ${tcard('vocal','mic','שירה – תחום קלאסי','אופרה · אורטוריה · ליד קלאסי')}
+        ${tcard('classical','🎻','נגינה – תחום קלאסי','כלי מיתר, כלי נשיפה, כלי הקשה, פסנתר')}
+        ${tcard('jazz','🎷','נגינה ושירה – ג׳אז','Be-bop · Ballads · Latin · Modern Jazz')}
+        ${tcard('vocal','🎤','שירה – תחום קלאסי','אופרה · אורטוריה · ליד קלאסי')}
       </div>
       <h3 class="form-sec">נסיון מקצועי</h3>
       <div class="row">
@@ -361,25 +270,25 @@ window.CITIZEN = (function(){
           <div class="field"><label><span class="req">*</span> שם המורה</label><input></div>
           <div class="field"><label>טלפון המורה</label><input class="bdi"></div>
           <div class="field"><label>דוא״ל המורה</label><input></div></div></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף מוסד נוסף</button>`;
+      <button class="btn-add" onclick="toast('הוספת מוסד — אב-טיפוס')">${UI.icon('plus',16)} הוסף מוסד נוסף</button>`;
     }
 
     if(k==='docs') return `
       <h3 class="form-sec">הופעות פומביות בתפקידי סולו</h3>
       <div style="overflow-x:auto"><table class="form-table"><thead><tr><th>חודש ושנה</th><th>מקום ההופעה</th><th>מסגרת</th><th>סולן בהרכב?</th><th></th></tr></thead>
-        <tbody><tr><td><input class="bdi" value="05/2024"></td><td><input value="היכל התרבות"></td><td><input value="קונצרט"></td><td><select><option>בחר</option><option selected>כן</option><option>לא</option></select></td><td><button class="row-del" onclick="delTableRow(this)">${UI.icon('trash',16)}</button></td></tr></tbody></table></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף הופעה</button>
+        <tbody><tr><td><input class="bdi" value="05/2024"></td><td><input value="היכל התרבות"></td><td><input value="קונצרט"></td><td><select><option>בחר</option><option selected>כן</option><option>לא</option></select></td><td><button class="row-del" onclick="toast('הוסר')">${UI.icon('trash',16)}</button></td></tr></tbody></table></div>
+      <button class="btn-add" onclick="toast('הוסף הופעה — אב-טיפוס')">${UI.icon('plus',16)} הוסף הופעה</button>
 
       <h3 class="form-sec">פרסים, מלגות ותחרויות</h3>
       <div style="overflow-x:auto"><table class="form-table"><thead><tr><th>חודש ושנה</th><th>שם התחרות / המלגה</th><th>זכית?</th><th>תיאור / הערות</th><th></th></tr></thead>
-        <tbody><tr><td><input class="bdi" value="03/2023"></td><td><input value="תחרות ארצית"></td><td><select><option>בחר</option><option selected>כן</option><option>לא</option></select></td><td><input value="מקום ראשון"></td><td><button class="row-del" onclick="delTableRow(this)">${UI.icon('trash',16)}</button></td></tr></tbody></table></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף שורה</button>
+        <tbody><tr><td><input class="bdi" value="03/2023"></td><td><input value="תחרות ארצית"></td><td><select><option>בחר</option><option selected>כן</option><option>לא</option></select></td><td><input value="מקום ראשון"></td><td><button class="row-del" onclick="toast('הוסר')">${UI.icon('trash',16)}</button></td></tr></tbody></table></div>
+      <button class="btn-add" onclick="toast('הוסף שורה — אב-טיפוס')">${UI.icon('plus',16)} הוסף שורה</button>
 
       <h3 class="form-sec">יצירות שבוצעו בשנתיים האחרונות</h3>
       <div class="info-box"><span class="ico">${UI.icon('info',18)}</span><div>יש לרשום את שם המלחין ואת שם היצירות באותיות לטיניות.</div></div>
       <div style="overflow-x:auto"><table class="form-table"><thead><tr><th>שם המלחין</th><th>שם היצירה</th><th></th></tr></thead>
-        <tbody><tr><td><input value="Bach"></td><td><input value="Prelude No.1"></td><td><button class="row-del" onclick="delTableRow(this)">${UI.icon('trash',16)}</button></td></tr></tbody></table></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף יצירה</button>
+        <tbody><tr><td><input value="Bach"></td><td><input value="Prelude No.1"></td><td><button class="row-del" onclick="toast('הוסר')">${UI.icon('trash',16)}</button></td></tr></tbody></table></div>
+      <button class="btn-add" onclick="toast('הוסף יצירה — אב-טיפוס')">${UI.icon('plus',16)} הוסף יצירה</button>
 
       <h3 class="form-sec">${UI.icon('clip',18)} העלאת מסמכים נוספים</h3>
       <div class="field"><div class="hint">ניתן להעלות תעודות, אישורי השתתפות, תמונות מהופעות ועוד.</div>
@@ -395,7 +304,7 @@ window.CITIZEN = (function(){
         <div class="row">
           <div class="field"><label><span class="req">*</span> סגנון</label><input value="בלט קלאסי"></div>
           <div class="field"><label><span class="req">*</span> משך הקטע בדקות</label><select><option>בחר משך</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option ${n===3?'selected':''}>${n}</option>`).join('')}</select></div></div></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף יצירה</button>
+      <button class="btn-add" onclick="toast('הוסף יצירה — אב-טיפוס')">${UI.icon('plus',16)} הוסף יצירה</button>
       <div class="note" style="margin-top:8px">לבחינת מחול אין צורך בפרטי מלווים.</div>`;
     if(k==='repertoire') return `
       <h3 class="form-sec">${UI.icon('music',18)} רפרטואר למבחן</h3>
@@ -407,7 +316,7 @@ window.CITIZEN = (function(){
         <div class="row">
           <div class="field"><label><span class="req">*</span> סגנון/תקופה</label><input value="Baroque"></div>
           <div class="field"><label><span class="req">*</span> משך הקטע בדקות</label><select><option>בחר משך</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option ${n===4?'selected':''}>${n}</option>`).join('')}</select></div></div></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף יצירה</button>
+      <button class="btn-add" onclick="toast('הוסף יצירה — אב-טיפוס')">${UI.icon('plus',16)} הוסף יצירה</button>
 
       <h3 class="form-sec">${UI.icon('user',18)} מלווים לבחינה</h3>
       <div class="info-box"><span class="ico">${UI.icon('info',18)}</span><div>ניתן לציין עד 4 מלווים.</div></div>
@@ -417,7 +326,7 @@ window.CITIZEN = (function(){
           <div class="field"><label><span class="req">*</span> כלי נגינה</label><input></div>
           <div class="field"><label><span class="req">*</span> טלפון</label><input class="bdi"></div>
           <div class="field"><label>דוא״ל</label><input></div></div></div>
-      <button class="btn-add" onclick="addRepeat(this)">${UI.icon('plus',16)} הוסף מלווה</button>`;
+      <button class="btn-add" onclick="toast('הוסף מלווה — אב-טיפוס')">${UI.icon('plus',16)} הוסף מלווה</button>`;
 
     if(k==='guidelines') return `
       <h3 class="form-sec">${UI.icon('book',18)} הנחיות למועמדים</h3>
@@ -430,20 +339,14 @@ window.CITIZEN = (function(){
           <li>נגני כלי נשיפה — נדרשת השתתפות במיונים לתזמורת צה"ל או אישור מתאים ממנהל התרבות.</li>
           <li>החלטות ועדת השיפוט הן סופיות.</li>
         </ul></div></div>
-      <label class="check" style="margin-top:16px"><input type="checkbox"><span><span class="req">*</span> קראתי והבנתי את ההנחיות וכן הסכמתי לכל הדרישות בהן.</span></label>`;
+      <label class="check" style="margin-top:16px"><input type="checkbox"><span>קראתי והבנתי את ההנחיות וכן הסכמתי לכל הדרישות בהן. <span class="req">*</span></span></label>`;
 
     if(k==='summary') return `
       <h3 class="form-sec">${UI.icon('checkc',18)} סיכום הבקשה</h3>
       <div class="sum-block"><div class="sb-h"><b>פרטים אישיים</b><button class="link" onclick="setStep(0)">${UI.icon('edit',14)} עריכה</button></div>
-        <div class="sb-grid">
-          <div class="sb-item"><span class="k">שם מלא</span><span class="v">עופר ברוידא</span></div>
-          <div class="sb-item"><span class="k">ת.ז</span><span class="v bdi">065465884</span></div>
-          <div class="sb-item"><span class="k">דוא״ל</span><span class="v">ofer@example.com</span></div>
-          <div class="sb-item"><span class="k">תאריך גיוס</span><span class="v">—</span></div></div></div>
+        <div class="sb-grid"><span class="k">שם מלא</span><span class="v">עופר ברוידא</span><span class="k">ת.ז</span><span class="v bdi">065465884</span><span class="k">דוא״ל</span><span class="v">ofer@example.com</span><span class="k">תאריך גיוס</span><span class="v">—</span></div></div>
       <div class="sum-block"><div class="sb-h"><b>הכשרה מקצועית</b><button class="link" onclick="setStep(1)">${UI.icon('edit',14)} עריכה</button></div>
-        <div class="sb-grid">
-          <div class="sb-item"><span class="k">מסלול</span><span class="v">נגינה – תחום קלאסי</span></div>
-          <div class="sb-item"><span class="k">כלי ראשי</span><span class="v">פסנתר</span></div></div></div>
+        <div class="sb-grid"><span class="k">מסלול</span><span class="v">נגינה – תחום קלאסי</span><span class="k">כלי ראשי</span><span class="v">פסנתר</span></div></div>
       <div class="sum-block"><div class="sb-h"><b>רפרטואר ומסמכים</b><button class="link" onclick="setStep(3)">${UI.icon('edit',14)} עריכה</button></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="badge-ok">${UI.icon('checkc',15)} פספורט הועלה</span><span class="badge-ok">${UI.icon('checkc',15)} ת.ז הועלתה</span><span class="badge-st st-prog">1 יצירה ברפרטואר</span></div></div>
 
@@ -456,9 +359,9 @@ window.CITIZEN = (function(){
 
       <h3 class="form-sec">${UI.icon('edit',18)} חתימה דיגיטלית</h3>
       <div class="hint" style="margin-bottom:8px">אנא חתום/י במסגרת למטה באמצעות העכבר או מסך המגע.</div>
-      <div class="sig-wrap"><canvas id="sigPad" class="sig-pad" aria-label="אזור חתימה"></canvas><span class="sig-ph">${UI.icon('edit',16)} חתום/י כאן</span></div>
-      <button class="link" onclick="clearSignature()">נקה חתימה</button>
-      <label class="check" style="margin-top:16px"><input type="checkbox" id="declare"><span><span class="req">*</span> אני מאשר/ת את כל ההצהרות ואת הגשת הבקשה.</span></label>`;
+      <div class="sig-pad" onclick="toast('חתימה — אב-טיפוס')">לחיצה לחתימה</div>
+      <button class="link" onclick="toast('החתימה נוקתה')">נקה חתימה</button>
+      <label class="check" style="margin-top:16px"><input type="checkbox" id="declare"><span>אני מאשר/ת את כל ההצהרות ואת הגשת הבקשה. <span class="req">*</span></span></label>`;
     return '';
   }
 
@@ -475,7 +378,7 @@ window.CITIZEN = (function(){
         <div class="sub">מעקב אחר כל הבקשות שהגשת, לפי סטטוס.</div>
         <div class="pills"><span class="pill on">הכל <span class="c">3</span></span><span class="pill">פעילות <span class="c">2</span></span><span class="pill">ממתין לפעולתך <span class="c">1</span></span><span class="pill">סגורות <span class="c">1</span></span></div>
         <div class="card">${rows}</div>`;
-      return UI.shell(UI.barApplicant(), cside('track'), main, {narrow:true});
+      return UI.shell(UI.barCitizen(), cside('track'), main, {narrow:true});
     }
     const r = DB.citizenRequests.find(x=>x.id===id) || DB.citizenRequests[0];
     const det = DB.requestDetail[r.id] || {ref:'—', docs:[], messages:[{from:'המערכת',date:r.submitted,body:`הבקשה התקבלה ומספרה ${r.id}.`}]};
@@ -486,10 +389,10 @@ window.CITIZEN = (function(){
       <li class="${r.status==='prog'?'cur':(closed?'done':'todo')}"><span class="pt"></span><div class="nm">בבחינה מקצועית</div></li>
       <li class="${closed?'cur':'todo'}"><span class="pt"></span><div class="nm">החלטת ועדה</div></li>
       <li class="${r.status==='appr'?'done':'todo'}"><span class="pt"></span><div class="nm">תוצאה${r.status==='appr'?' — אושרה':''}</div></li></ul>`;
-    const docsHtml = det.docs.length ? det.docs.map(d=>`<div class="lrow"><div class="info"><div class="nm">${d.name} ${UI.statusBadge(d.status,d.label)}</div></div>${d.status==='wait'?`<button class="btn btn-pri btn-sm" onclick="nav('apply')">העלה</button>`:`<button class="link" onclick="toast('צפייה במסמך — אב-טיפוס')">צפה</button>`}</div>`).join('') : `<div class="empty" style="padding:20px"><span class="muted">אין מסמכים מצורפים</span></div>`;
+    const docsHtml = det.docs.length ? det.docs.map(d=>`<div class="lrow">${UI.statusBadge(d.status,d.label)}<div class="info"><div class="nm">${d.name}</div></div>${d.status==='wait'?`<button class="btn btn-pri btn-sm" onclick="nav('apply')">העלה</button>`:`<button class="link" onclick="toast('צפייה במסמך — אב-טיפוס')">צפה</button>`}</div>`).join('') : `<div class="empty" style="padding:20px"><span class="muted">אין מסמכים מצורפים</span></div>`;
     const msgsHtml = det.messages.map(m=>`<div class="lrow" style="align-items:flex-start"><span style="font-size:18px;color:var(--blue);line-height:1" aria-hidden="true">${m.from==='המשרד'?UI.icon("mail",18):UI.icon("settings",18)}</span><div class="info"><div class="nm" style="font-size:13.5px">${m.from} · <span class="muted" style="font-weight:600">${m.date}</span></div><div class="mt" style="color:var(--secondary)">${m.body}</div></div></div>`).join('');
     const main = `
-      ${UI.crumb([{t:'הבקשות שלי',go:"nav('home')"},{t:r.id,strong:true}])}
+      ${UI.crumb([{t:'אזור אישי',go:"nav('home')"},{t:'הבקשות שלי',go:"nav('track')"},{t:r.id,strong:true}])}
       <div class="page-head"><h1 class="title">${r.service}</h1></div>
       <div class="idpair" style="margin:8px 0 16px;align-items:center">${UI.statusBadge(r.status, r.label)}<span><b>מספר בקשה</b> <bdi>${r.id}</bdi></span>${det.ref&&det.ref!=='—'?`<span><b>מספר סימוכין</b> <bdi>${det.ref}</bdi></span>`:''}<span>הוגשה ${r.submitted}</span></div>
       <div class="two-col" style="margin-top:8px">
@@ -502,7 +405,7 @@ window.CITIZEN = (function(){
             <button class="btn btn-out btn-block" style="${waiting?'':'margin-top:10px'}" onclick="toast('צפייה בטופס — אב-טיפוס')">צפייה בטופס המלא</button></div></div>
           <div class="card accent"><div class="card-h"><b>${UI.icon("mail",18)} הודעות הבקשה</b></div>${msgsHtml}</div></div>
       </div>`;
-    return UI.shell(UI.barApplicant(), cside('track'), main);
+    return UI.shell(UI.barCitizen(), cside('track'), main);
   }
 
   /* ---------- הודעות ---------- */
@@ -517,7 +420,7 @@ window.CITIZEN = (function(){
       <div class="page-head"><h1 class="title">הודעות</h1><button class="btn btn-ghost btn-sm" onclick="toast('סומן כנקרא',true)">סמן הכל כנקרא</button></div>
       <div class="sub">עדכונים על הבקשות שלך והודעות מהמשרד.</div>
       <div class="card">${list}</div>`;
-    return UI.shell(UI.barApplicant(), cside('notifications'), main, {narrow:true});
+    return UI.shell(UI.barCitizen(), cside('notifications'), main, {narrow:true});
   }
 
   /* ---------- פרופיל (MyGov style) ---------- */
@@ -564,7 +467,7 @@ window.CITIZEN = (function(){
           <div class="lrow" style="padding:12px 0;border:none">${UI.icon('doc',18)}<div class="info"><div class="nm" style="font-size:14px">תעודת זהות</div></div>${UI.badgeOk('בתוקף')}</div>
         </div></div>
       </div>`;
-    return UI.shell(UI.barApplicant(), cside('profile'), main);
+    return UI.shell(UI.barCitizen(), cside('profile'), main);
   }
 
   /* ---------- T-18 · Success / Submission Result ---------- */
@@ -585,7 +488,7 @@ window.CITIZEN = (function(){
           <li>לאחר מכן הבקשה תועבר לבחינה מקצועית ולהחלטת ועדה.</li>
         </ul></div></div>
     </div>`;
-    return UI.bleed(UI.barApplicant(), main) + UI.govFooter();
+    return UI.bleed(UI.barCitizen(), main) + UI.govFooter();
   }
 
   /* ---------- T-16/T-17/T-15 · Full-page states (citizen-facing) ---------- */
@@ -604,8 +507,8 @@ window.CITIZEN = (function(){
         <button class="btn btn-pri btn-lg" onclick="${which==='empty'?"nav('services')":"nav('home')"}">${v.a}</button>
         ${v.a2?`<button class="btn btn-out btn-lg" onclick="nav('home')">${v.a2}</button>`:''}
       </div></div>`;
-    return UI.bleed(UI.barApplicant(), main) + UI.govFooter();
+    return UI.bleed(UI.barCitizen(), main) + UI.govFooter();
   }
 
-  return {login, auth, home, services, service, apply, track, notifications, profile, success, cstate};
+  return {login, home, services, service, apply, track, notifications, profile, success, cstate};
 })();

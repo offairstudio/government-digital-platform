@@ -12,24 +12,24 @@ window.OPS = (function(){
   function gateway(){
     const cards = [
       {id:'driving', logo:'נ', name:'נהיגה ספורטיבית', org:'רשות לנהיגה ספורטיבית', tag:'רשות', img:'assets/systems/driving.jpg', state:'active'},
-      {id:'human',   logo:'מ', name:'מצטיינים בצה״ל',  org:'אגף מצטיינים · משרד התרבות והספורט', tag:'אגף', img:'assets/systems/excellence.png', state:'active'},
+      {id:'human',   logo:'ה', name:'הון אנושי',       org:'מטה · משרד החדשנות, המדע והטכנולוגיה', tag:'מטה', img:'assets/systems/human.jpg', inv:true, state:'active'},
       {id:'excel',   logo:'מ', name:'מערכת מצטינים',   org:'אגף התרבות', tag:'אגף', img:'assets/systems/excel.png', state:'maint'},
-      {id:'funds',   logo:'ס', name:'סל מדע',          org:'משרד החדשנות, המדע והטכנולוגיה', tag:'מטה', img:'assets/systems/funds.jpg', inv:true, state:'lock'},
+      {id:'funds',   logo:'ק', name:'קרנות ותמיכות',   org:'אגף התרבות', tag:'אגף', img:'assets/systems/funds.jpg', state:'lock'},
     ];
     const card = c=>{
       if(c.state==='maint') return `<div class="gw-card maint disabled">
         <div class="banner maint"><img class="bn-img" src="${c.img}" alt="" loading="lazy"><div class="state-msg"><span class="si">${UI.icon("wrench",20)}</span>המערכת מתעדכנת<br><span style="font-weight:600;font-size:12.5px">אנא חזרו במועד מאוחר יותר</span></div></div>
-        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(32):UI.ministryLogo(32)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></div>`;
+        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(26):UI.ministryLogo(26)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></div>`;
       if(c.state==='lock') return `<div class="gw-card disabled" title="אין הרשאה">
         <div class="banner lock"><img class="bn-img" src="${c.img}" alt="" loading="lazy"><div class="state-msg"><span class="si">${UI.icon("lock",18)}</span>אין גישה למערכת זו<br><span style="font-weight:600;font-size:12.5px">נדרש כרטיס חכם</span></div></div>
-        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(32):UI.ministryLogo(32)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></div>`;
+        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(26):UI.ministryLogo(26)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></div>`;
       return `<button class="gw-card" onclick="enterSystem('${c.id}')">
         <div class="banner"><img class="bn-img" src="${c.img}" alt="" loading="lazy"><span class="tag">${c.tag}</span></div>
-        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(32):UI.ministryLogo(32)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></button>`;
+        <div class="ftr"><div class="seal" style="background:#fff;padding:5px">${c.inv?UI.stateLogo(26):UI.ministryLogo(26)}</div><div class="org">${c.org}</div><div class="nm">${c.name}</div></div></button>`;
     };
     const html = `<div class="gateway-wrap">
       <div class="gw-head"><h1>בחרו במערכת הרצויה</h1>
-        <p>שלום עופר — בחרו את המערכת שאליה תרצו להיכנס, בהתאם להרשאות שלכם. ניתן להחליף מערכת בכל עת מהתפריט העליון.</p></div>
+        <p>שלום רינת — בחרו את המערכת שברצונכם לנהל, בהתאם להרשאות שלכם. ניתן להחליף מערכת בכל עת מהתפריט העליון.</p></div>
       <div class="gateway">${cards.map(card).join('')}</div>
     </div>`;
     return UI.bleed(UI.barGateway(), html) + UI.govFooter();

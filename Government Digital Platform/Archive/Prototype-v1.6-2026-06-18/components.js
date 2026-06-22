@@ -9,7 +9,6 @@ window.UI = (function(){
     home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/>',
     file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
     plus:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
-    plusbare:'<path d="M12 5v14M5 12h14"/>',
     mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
     user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6"/>',
     help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-1.4 1-1.4 1.9v.3"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/>',
@@ -48,9 +47,6 @@ window.UI = (function(){
     award:'<circle cx="12" cy="9" r="5"/><path d="m8.5 13.5-1.5 7 5-3 5 3-1.5-7"/>',
     book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 0-3 3z"/><path d="M5 20a3 3 0 0 1 3-3h11"/>',
     music:'<path d="M9 18V6l11-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
-    piano:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 5v8M11 5v8M15 5v8M3 13h18"/>',
-    mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v4M9 21h6"/>',
-    disc:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.3"/><path d="M12 3a9 9 0 0 1 6.4 2.6"/>',
     flag:'<path d="M5 21V4M5 4h12l-2 4 2 4H5"/>',
     grid:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
     settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M5 5l2 2M17 17l2 2M2 12h3M19 12h3M5 19l2-2M17 7l2-2"/>',
@@ -78,7 +74,7 @@ window.UI = (function(){
   /* ---- header pieces ---- */
   function emblem(title, sub, logoHtml){
     const subTxt = (sub===undefined) ? 'פורטל שירותים ממשלתי' : sub;
-    return `<button class="brand-lock" onclick="goHome()" title="פורטל השירותים והבקשות — דף הבית">
+    return `<button class="brand-lock" onclick="goLanding()" title="פורטל שירותים ממשלתי — דף הבית">
       <span class="emblem ministry">${logoHtml||stateLogo(38)}</span>
       <span class="bl-div"></span>
       <span class="bl-tx"><span class="wm">${title||'מדינת ישראל'}</span>${subTxt?`<span class="wm-sub">${subTxt}</span>`:''}</span>
@@ -94,30 +90,30 @@ window.UI = (function(){
     ).join('');
     return `<div class="userpill-wrap">
       <button class="userpill" onclick="toggleUserMenu(event)" aria-haspopup="true"><span class="ava">${icon('user',17)}</span>
-        <span class="up-tx"><span>${name}</span>${sub?`<span class="sub">${sub}</span>`:''}</span>${icon('chevdown',14)}</button>
+        <span class="up-tx"><span>${name}</span><span class="sub">${sub}</span></span>${icon('chevdown',14)}</button>
       <div class="usermenu hidden">${menu}</div>
     </div>`;
   }
 
   function barCitizen(){
     return `<header class="govbar light"><div class="left">
-        ${emblem('פורטל השירותים והבקשות','האזור האישי')}</div>
+        ${emblem()}</div>
       <div class="right">
         <button class="iconbtn lang" title="שפה: English" aria-label="שינוי שפה" onclick="toast('English — אב-טיפוס')">${icon('globe',18)}<span>עברית</span></button>
         ${iconbtn('mail','הודעות',"nav('notifications')",2)}
-        ${userPill('עופר ברוידא','',[
-          {label:'הבקשות שלי',icon:'home',onclick:"nav('home')"},
+        ${userPill('עופר ברוידא','אזור אישי',[
+          {label:'אזור אישי',icon:'home',onclick:"nav('home')"},
+          {label:'הבקשות שלי',icon:'file',onclick:"nav('track')"},
           {label:'פרטים אישיים',icon:'user',onclick:"nav('profile')"},
           {div:true},
-          {label:'החלפת מערכת',icon:'grid',onclick:"nav('gateway')"},
-          {label:'התנתקות',icon:'arrowl',onclick:"goScreen('c','login')",danger:true},
+          {label:'התנתקות',icon:'arrowl',onclick:'goLanding()',danger:true},
         ])}
       </div></header>`;
   }
   function barGateway(){
-    return `<header class="govbar dark"><div class="left">${emblem('פורטל השירותים והבקשות','האזור האישי')}</div>
-      <div class="right">${userPill('עופר ברוידא','',[
-        {label:'התנתקות',icon:'arrowl',onclick:"goScreen('c','login')",danger:true},
+    return `<header class="govbar dark"><div class="left">${emblem('מערכת ניהול בקשות','')}</div>
+      <div class="right">${userPill('רינת אדרי','יציאה',[
+        {label:'התנתקות',icon:'arrowl',onclick:'goLanding()',danger:true},
       ])}</div></header>`;
   }
   function barOps(system){
@@ -142,49 +138,6 @@ window.UI = (function(){
           {label:'החלפת מערכת',icon:'grid',onclick:"nav('gateway')"},
           {div:true},
           {label:'התנתקות',icon:'arrowl',onclick:'goLanding()',danger:true},
-        ])}
-      </div></header>`;
-  }
-
-  /* ---- סרגל אזור אישי (לאחר בחירת מערכת) — נאמן ל-Figma ---- */
-  function barApplicant(minimal){
-    const sys = state.sysName || 'נהיגה ספורטיבית';
-    const sub = state.sysSub || 'רישוי נהגים ספורטיביים';
-    const minName = state.sysLogo==='state' ? 'משרד החדשנות, המדע והטכנולוגיה' : 'משרד התרבות והספורט';
-    const brand = `<button class="brand-lock applic-brand" onclick="nav('home')" title="${minName} — דף הבית"><span class="emblem ministry no-chip">${state.sysLogo==='state'?stateLogo(40):ministryLogo(40)}</span><span class="bl-tx"><span class="wm">${minName}</span></span></button>`;
-    if(minimal){
-      return `<header class="govbar dark"><div class="left">
-        ${brand}
-        <div class="ctx ctx-static"><span class="ctx-sys">${sys}</span><span class="ctx-sub">${sub}</span></div>
-      </div>
-      <div class="right"><button class="bar-exit" onclick="nav('home')" title="יציאה מהתהליך">${icon('x',18)} יציאה מהתהליך</button></div>
-      </header>`;
-    }
-    return `<header class="govbar dark"><div class="left">
-        ${brand}
-        <div class="ctx">
-          <div class="subsys-wrap syswitch">
-            <button class="sw sw-combo" onclick="toggleSubsys(event)" aria-haspopup="true" aria-label="בחירת מערכת ותת-מערכת">
-              <span class="sw-stack"><span class="sw-sys">${sys}</span><span class="sw-sub">${sub}</span></span>${icon('chevdown',16)}
-            </button>
-            <div class="subsysmenu sysmenu hidden">
-              <div class="ssm-head">מערכת</div>
-              ${Object.keys(SYS_MAP).map(id=>{const s=SYS_MAP[id];const cur=s.name===sys;return `<button class="um-item${cur?' on':''}" onclick="closeMenus();enterSystem('${id}')">${icon('grid',16)}<span class="um-tx">${s.name}</span>${cur?icon('check',16):''}</button>`;}).join('')}
-              <div class="um-div"></div>
-              <div class="ssm-head">תת-מערכת</div>
-              ${(state.sysSubs||[sub]).map(s=>{const cur=s===sub;return `<button class="um-item${cur?' on':''}" onclick="closeMenus();setAppSub('${s}')">${icon('list',16)}<span class="um-tx">${s}</span>${cur?icon('check',16):''}</button>`;}).join('')}
-            </div>
-          </div>
-        </div></div>
-      <div class="right">
-        <button class="bar-newreq" onclick="newRequest()">${icon('plusbare',18)} הגשת בקשה חדשה</button>
-        ${userPill('עופר ברוידא','',[
-          {label:'הבקשות שלי',icon:'home',onclick:"nav('home')"},
-          {label:'הודעות',icon:'mail',onclick:"nav('notifications')"},
-          {label:'פרטים אישיים',icon:'user',onclick:"nav('profile')"},
-          {div:true},
-          {label:'החלפת מערכת',icon:'grid',onclick:"nav('gateway')"},
-          {label:'התנתקות',icon:'arrowl',onclick:"goScreen('c','login')",danger:true},
         ])}
       </div></header>`;
   }
@@ -228,16 +181,11 @@ window.UI = (function(){
   function designMap(){
     const grp = (title, items)=>`<div class="dm-grp"><h3>${title}</h3><div class="dm-list">${items.map(i=>`<button class="dm-item" onclick="${i.go}">${icon(i.ic||'file',18)}<span>${i.t}</span>${icon('arrowl',15)}</button>`).join('')}</div></div>`;
     const cit = [
-      {t:'1 · הזדהות וכניסה', ic:'shield', go:"goScreen('c','login')"},
-      {t:'2 · הזדהות לאומית (gov.il)', ic:'lock', go:"goScreen('c','auth')"},
-      {t:'3 · בחירת מערכת', ic:'grid', go:"goScreen('c','gateway')"},
-      {t:'4 · אזור אישי — הבקשות שלי', ic:'home', go:"goScreen('c','home')"},
-      {t:'4ב · אזור אישי — מצב ריק', ic:'inbox', go:"goEmptyHome()"},
-      {t:'5 · טופס בקשה (תהליך)', ic:'edit', go:"goScreen('c','apply')"},
-    ];
-    const citMore = [
+      {t:'הזדהות', ic:'shield', go:"goScreen('c','login')"},
+      {t:'אזור אישי', ic:'home', go:"goScreen('c','home')"},
       {t:'קטלוג שירותים', ic:'list', go:"goScreen('c','services')"},
       {t:'דף שירות', ic:'file', go:"goScreen('c','service','music')"},
+      {t:'טופס מועמדות', ic:'edit', go:"goScreen('c','apply')"},
       {t:'מעקב בקשה', ic:'clock', go:"goScreen('c','track','M-2026-0042')"},
       {t:'הודעות', ic:'mail', go:"goScreen('c','notifications')"},
       {t:'פרטים אישיים', ic:'user', go:"goScreen('c','profile')"},
@@ -249,6 +197,15 @@ window.UI = (function(){
       {t:'שגיאה', ic:'alert', go:"goState('c','error')"},
       {t:'מצב ריק', ic:'inbox', go:"goState('c','empty')"},
     ];
+    const ops = [
+      {t:'כניסת עובד', ic:'shield', go:"goScreen('o','login')"},
+      {t:'בחירת מערכת', ic:'grid', go:"goScreen('o','gateway')"},
+      {t:'רשימת בקשות', ic:'list', go:"goScreen('o','requests')"},
+      {t:'טיפול בבקשה', ic:'edit', go:"goScreen('o','case','M-2026-0042')"},
+      {t:'הכרעה', ic:'checkc', go:"goScreen('o','decision','M-2026-0042')"},
+      {t:'ועדות ובחינות', ic:'award', go:"goScreen('o','committees')"},
+      {t:'מצבי מערכת', ic:'settings', go:"goScreen('o','states')"},
+    ];
     return `<div class="landing"><div class="landing-top">
         <span class="brand-lock" style="cursor:pointer" onclick="goLanding()"><span class="emblem" style="color:var(--navy)">${icon('menorah',32)}</span>
           <span class="bl-div" style="background:var(--line)"></span>
@@ -257,10 +214,10 @@ window.UI = (function(){
       </div>
       <div class="dm-wrap">
         <h1>מפת מסכים — אב-טיפוס</h1>
-        <p class="dm-lead">פורטל השירותים והבקשות · האזור האישי — מסך אחרי מסך, לפי סדר המסע.</p>
-        ${grp('המסע הראשי', cit)}
-        ${grp('מסכים נוספים', citMore)}
-        ${grp('מצבי מערכת', citStates)}
+        <p class="dm-lead">אינדקס לצפייה בכל המסכים והמצבים בשני המוצרים (לסקירת עיצוב).</p>
+        ${grp('Citizen Portal · משתמש קצה', cit)}
+        ${grp('Citizen · מצבי מערכת', citStates)}
+        ${grp('Operations · ניהול בקשות', ops)}
       </div>${govFooter()}</div>`;
   }
 
@@ -289,7 +246,7 @@ window.UI = (function(){
 
   function govFooter(){
     return `<footer class="govfoot">
-      <div class="brand"><span class="fseal" style="background:#fff;padding:4px">${stateLogo(22)}</span> פורטל השירותים והבקשות</div>
+      <div class="brand"><span class="fseal" style="background:#fff;padding:4px">${stateLogo(22)}</span> פורטל שירותים ממשלתי</div>
       <div class="lnks"><a href="#" onclick="goMap();return false">מפת מסכים</a><a href="#" onclick="return false">הצהרת נגישות</a><a href="#" onclick="return false">תנאי שימוש</a><a href="#" onclick="return false">פרטיות</a><a href="#" onclick="return false">צור קשר</a></div>
       <div>מופעל ע״י מערכת ההזדהות הממשלתית · gov.il</div></footer>`;
   }
@@ -315,14 +272,14 @@ window.UI = (function(){
 
   function shell(bar, sideHtml, mainHtml, opts){
     opts=opts||{};
-    const cls = opts.narrow?'main narrow':(opts.appcol?'main appcol':(opts.formpage?'main formpage':'main'));
+    const cls = opts.narrow?'main narrow':'main';
     const skip = `<a href="#main" class="skip-link">דלג לתוכן</a>`;
     const overlay = sideHtml ? `<div class="menu-overlay" onclick="toggleMenu()"></div>` : '';
-    return skip + bar + overlay + `<div class="app-body">${sideHtml||''}<main id="main" class="${cls}" tabindex="-1">${mainHtml}</main></div>` + govFooter() + (opts.nofab?'':fab(opts.fab));
+    return skip + bar + overlay + `<div class="app-body">${sideHtml||''}<main id="main" class="${cls}" tabindex="-1">${mainHtml}</main></div>` + govFooter() + fab(opts.fab);
   }
   function bleed(bar, html){ return bar + html; }
 
-  return {icon, ministryLogo, stateLogo, emblem, iconbtn, barCitizen, barGateway, barOps, barApplicant, barAuth, landing, designMap, side, statusBadge, crumb, stepper, progress, govFooter, fab, art, avatar, badgeOk, shell, bleed};
+  return {icon, ministryLogo, stateLogo, emblem, iconbtn, barCitizen, barGateway, barOps, barAuth, landing, designMap, side, statusBadge, crumb, stepper, progress, govFooter, fab, art, avatar, badgeOk, shell, bleed};
 })();
 
 /* ---- Toast ---- */
