@@ -287,7 +287,7 @@ window.UI = (function(){
 
   function govFooter(){
     return `<footer class="govfoot">
-      <div class="brand"><span class="fseal" style="background:#fff;padding:4px">${stateLogo(22)}</span> פורטל השירותים והבקשות</div>
+      <div class="brand"><span class="fseal">${stateLogo(30)}</span> פורטל השירותים והבקשות</div>
       <div class="lnks"><a href="#" onclick="goMap();return false">מפת מסכים</a><a href="#" onclick="return false">הצהרת נגישות</a><a href="#" onclick="return false">תנאי שימוש</a><a href="#" onclick="return false">פרטיות</a><a href="#" onclick="return false">צור קשר</a></div>
       <div>מופעל ע״י מערכת ההזדהות הממשלתית · gov.il</div></footer>`;
   }
