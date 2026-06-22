@@ -94,7 +94,7 @@ window.UI = (function(){
     ).join('');
     return `<div class="userpill-wrap">
       <button class="userpill" onclick="toggleUserMenu(event)" aria-haspopup="true"><span class="ava">${icon('user',17)}</span>
-        <span class="up-tx"><span>${name}</span>${sub?`<span class="sub">${sub}</span>`:''}</span>${icon('chevdown',14)}</button>
+        <span class="up-tx"><span>${name}</span>${sub?`<span class="sub">${sub}</span>`:''}</span>${icon('chevdown',16)}</button>
       <div class="usermenu hidden">${menu}</div>
     </div>`;
   }
@@ -157,7 +157,9 @@ window.UI = (function(){
         ${brand}
         <div class="ctx ctx-static"><span class="ctx-sys">${sys}</span><span class="ctx-sub">${sub}</span></div>
       </div>
-      <div class="right"><button class="bar-exit" onclick="nav('home')" title="יציאה מהתהליך">${icon('x',18)} יציאה מהתהליך</button></div>
+      <div class="right">
+        <span class="autosave bar-autosave" title="טיוטה נשמרה אוטומטית"><span class="as-note">טיוטה נשמרה אוטומטית ·</span>${icon('save',16)}<span class="as-time">09:51</span></span>
+        <button class="bar-exit" onclick="nav('home')" title="יציאה מהתהליך">${icon('x',18)} יציאה מהתהליך</button></div>
       </header>`;
     }
     return `<header class="govbar dark"><div class="left">

@@ -183,12 +183,12 @@ input,select,textarea{font-family:inherit}
 .userpill{display:flex;align-items:center;gap:9px;height:40px;flex-shrink:0;box-sizing:border-box;border-radius:var(--r-pill);padding:0 14px 0 5px;font-size:13.5px;font-weight:600}
 .govbar.light .userpill{border:1px solid var(--line)}
 .govbar.light .userpill:hover{background:var(--bg)}
-.govbar.dark .userpill{background:rgba(255,255,255,.1);color:#fff}
-.govbar.dark .userpill:hover{background:rgba(255,255,255,.2)}
+.govbar.dark .userpill{background:transparent;color:#fff}
+.govbar.dark .userpill:hover{background:rgba(255,255,255,.12)}
 .userpill .up-tx{display:flex;flex-direction:column;text-align:start;line-height:1.15;white-space:nowrap}
 .userpill .sub{font-size:10.5px;font-weight:400;color:var(--muted);margin:0;max-width:none;line-height:1.15}
 .govbar.dark .userpill .sub{color:rgba(255,255,255,.65)}
-.userpill .up-tx + .ic-svg{opacity:.55}
+.userpill .up-tx + .ic-svg{opacity:.7;margin-inline-start:-4px}
 .ava{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;
   justify-content:center;flex-shrink:0;order:-1}
 .ava .ic-svg{display:block}
@@ -948,6 +948,10 @@ body.formbar .govbar{position:static}
 .bar-exit{display:inline-flex;align-items:center;gap:7px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:7px;padding:8px 16px;font-size:14px;font-weight:500;cursor:pointer;transition:background .12s,border-color .12s}
 .bar-exit:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.7)}
 .bar-exit .ic-svg{flex-shrink:0}
+.bar-autosave{color:rgba(255,255,255,.82);font-size:13px;gap:7px}
+.bar-autosave .ic-svg{color:rgba(255,255,255,.7)}
+.bar-autosave .as-note{color:#BFF0CF}
+.bar-autosave.saving{color:#fff}
 
 /* art-slot עם תמונה אמיתית (Hero מערכת) */
 .art-slot.has-art{background:linear-gradient(135deg,#EAF2FF,#DCEBFF)}

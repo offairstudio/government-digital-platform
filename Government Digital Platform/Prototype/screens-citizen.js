@@ -250,8 +250,7 @@ window.CITIZEN = (function(){
       <div class="form-sections">${stepBody}</div>
       <div class="formfoot">
         <button class="btn btn-ghost" onclick="prevStep()" ${step===0?'disabled':''}>→ שלב קודם</button>
-        <div class="acts"><span class="autosave" title="טיוטה נשמרה אוטומטית"><span class="as-note">טיוטה נשמרה אוטומטית ·</span>${UI.icon("save",18)}<span class="as-time">09:51</span></span>
-          <button class="btn btn-out" onclick="toast('טיוטה נשמרה',true)">שמירת טיוטה</button>
+        <div class="acts">
           ${step<f.steps.length-1?`<button class="btn btn-pri" onclick="nextStep()">המשך לשלב הבא ←</button>`:`<button class="btn btn-pri" onclick="submitForm()">${UI.icon("check",16)} הגשת הבקשה</button>`}</div></div>`;
     return UI.shell(UI.barApplicant(true), null, main, {nofab:true, formpage:true});
   }
