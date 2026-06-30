@@ -162,8 +162,20 @@ window.UI = (function(){
       </header>`;
     }
     return `<header class="govbar dark"><div class="left">
-        ${brand}</div>
+        ${brand}
+        <div class="ctx">
+          <div class="subsys-wrap syswitch">
+            <button class="sw sw-combo" onclick="toggleSubsys(event)" aria-haspopup="true" aria-label="בחירת מערכת">
+              <span class="sw-sys">${sys}</span>${icon('chevdown',16)}
+            </button>
+            <div class="subsysmenu sysmenu hidden">
+              <div class="ssm-head">בחירת מערכת</div>
+              ${Object.keys(SYS_MAP).map(id=>{const s=SYS_MAP[id];const cur=s.name===sys;return `<button class="um-item${cur?' on':''}" onclick="closeMenus();enterSystem('${id}')">${icon('grid',16)}<span class="um-tx">${s.name}</span>${cur?icon('check',16):''}</button>`;}).join('')}
+            </div>
+          </div>
+        </div></div>
       <div class="right">
+        <button class="bar-newreq" onclick="newRequest()" aria-label="הגשת בקשה חדשה">${icon('plusbare',18)} <span class="btn-lbl">הגשת בקשה חדשה</span></button>
         ${userPill('עופר ברוידא','',[
           {label:'הבקשות שלי',icon:'home',onclick:"nav('home')"},
           {label:'הודעות',icon:'mail',onclick:"nav('notifications')"},

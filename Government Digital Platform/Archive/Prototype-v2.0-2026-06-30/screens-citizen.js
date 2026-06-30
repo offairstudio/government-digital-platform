@@ -108,22 +108,60 @@ window.CITIZEN = (function(){
   }
 
   function emptyHome(){
+    const feat=(ic,t,d)=>`<div class="ae-feat"><span class="ae-feat-ic">${UI.icon(ic,20)}</span><div class="ae-feat-tx"><b>${t}</b><p>${d}</p></div></div>`;
     const main = `${hero()}
       <div class="app-empty">
         <h2>עדיין לא הגשת בקשות</h2>
         <p>זהו האזור האישי שלך במערכת. כאן יופיעו כל הבקשות שתגיש — אפשר לעקוב אחר הסטטוס, להשלים פרטים חסרים ולהמשיך טיוטות שמורות, הכול במקום אחד.</p>
         <button class="btn btn-pri btn-lg" onclick="newRequest()">${UI.icon('plusbare',18)} הגשת בקשה חדשה</button>
+        <div class="ae-feats">
+          ${feat('list','מעקב סטטוס','עדכון על כל שלב בטיפול בבקשה')}
+          ${feat('bell','התראות','הודעה כשנדרשת השלמת פרטים')}
+          ${feat('save','שמירת טיוטות','אפשר לעצור ולהמשיך בכל זמן')}
+        </div>
       </div>`;
     return UI.shell(UI.barApplicant(), null, main, {appcol:true});
   }
 
   function home(){
     if(state.appEmpty) return emptyHome();
-    const rows = DB.appRequests.slice();
+    const q = (state.appSearch||'').trim();
+    const type = state.appType||'all';
+    const period = state.appPeriod||'all';
+    let rows = DB.appRequests.slice();
+    if(q) rows = rows.filter(r=>(r.service+' '+r.id+' '+r.meta+' '+(r.desc||'')).includes(q));
+    if(type!=='all') rows = rows.filter(r=>r.type===type);
+    if(period==='new') rows.sort((a,b)=>b.sortKey-a.sortKey);
+    if(period==='old') rows.sort((a,b)=>a.sortKey-b.sortKey);
+    const types = [...new Set(DB.appRequests.map(r=>r.type))];
+
+    const groupsHtml = DB.appGroups.map(g=>{
+      const items = rows.filter(r=>r.group===g.k);
+      if(!items.length) return '';
+      return `<section class="reqgroup">
+        <h3 class="rg-title">${g.t}</h3>
+        <div class="reqcards">${items.map(reqCard).join('')}</div></section>`;
+    }).join('');
+
+    const noMatch = `<div class="empty" style="margin-top:8px"><div class="ic">${UI.icon('search',28)}</div><b>לא נמצאו בקשות</b>
+        <p>לא נמצאו בקשות התואמות את הסינון. נסו מילה אחרת או אפסו את הסינון.</p>
+        <button class="btn btn-out" onclick="setAppSearch('');setAppType('all')">איפוס סינון</button></div>`;
+
     const main = `${hero()}
-      <div class="app-list-head"><h2>הבקשות שלי</h2>
-        <button class="btn btn-pri" onclick="newRequest()">${UI.icon('plusbare',18)} הגשת בקשה חדשה</button></div>
-      <div class="reqcards">${rows.map(reqCard).join('')}</div>`;
+      <div class="app-list-head"><h2>הבקשות שלי</h2></div>
+      <div class="app-filters">
+        <div class="field"><label>מילת חיפוש</label>
+          <input id="appSearchInput" placeholder="שם / מס׳ בקשה / ת.ז / סימוכין" value="${q}" oninput="setAppSearch(this.value)"></div>
+        <div class="field" style="max-width:240px"><label>סוג בקשה</label>
+          <select onchange="setAppType(this.value)"><option value="all">כל סוגי הבקשות</option>${types.map(t=>`<option value="${t}" ${type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+        <div class="field" style="max-width:190px"><label>מתי עודכן</label>
+          <select onchange="setAppPeriod(this.value)">
+            <option value="all" ${period==='all'?'selected':''}>כל התקופות</option>
+            <option value="new" ${period==='new'?'selected':''}>מהחדש לישן</option>
+            <option value="old" ${period==='old'?'selected':''}>מהישן לחדש</option>
+          </select></div>
+      </div>
+      ${rows.length ? groupsHtml : noMatch}`;
     return UI.shell(UI.barApplicant(), null, main, {appcol:true});
   }
 

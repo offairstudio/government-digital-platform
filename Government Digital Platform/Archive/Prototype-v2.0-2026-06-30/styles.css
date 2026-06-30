@@ -920,7 +920,7 @@ body.formbar .govbar{position:static}
   margin-top:-38px;margin-bottom:-38px;display:flex}
 .apphero .hero-art-img{width:100%;height:100%;object-fit:cover;display:block}
 
-.app-list-head{margin:2px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.app-list-head{margin:2px 0 14px}
 .app-list-head h2{font-size:24px;font-weight:600;color:var(--ink-strong);text-align:right}
 .app-filters{display:flex;gap:16px;margin-bottom:28px}
 .app-filters .field{flex:1;min-width:0;margin:0}
