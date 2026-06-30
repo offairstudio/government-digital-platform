@@ -119,10 +119,9 @@ window.CITIZEN = (function(){
 
   function home(){
     if(state.appEmpty) return emptyHome();
-    const rows = DB.appRequests.slice();
+    const rows = DB.appRequests.slice(0,1);
     const main = `${hero()}
-      <div class="app-list-head"><h2>הבקשות שלי</h2>
-        <button class="btn btn-pri" onclick="newRequest()">${UI.icon('plusbare',18)} הגשת בקשה חדשה</button></div>
+      <div class="app-list-head"><h2>הבקשות שלי</h2></div>
       <div class="reqcards">${rows.map(reqCard).join('')}</div>`;
     return UI.shell(UI.barApplicant(), null, main, {appcol:true});
   }
