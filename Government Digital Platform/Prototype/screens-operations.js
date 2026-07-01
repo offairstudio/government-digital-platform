@@ -33,7 +33,7 @@ window.OPS = (function(){
         <p>שלום עופר — בחרו את המערכת שאליה תרצו להיכנס, בהתאם להרשאות שלכם. ניתן להחליף מערכת בכל עת מהתפריט העליון.</p></div>
       <div class="gateway">${cards.map(card).join('')}</div>
     </div>`;
-    return UI.bleed(UI.barGateway(), html) + UI.govFooter();
+    return UI.bleed(UI.barGateway(), html);
   }
 
   /* ---------- רשימת בקשות (אקורדיון מקובץ לפי סטטוס) ---------- */

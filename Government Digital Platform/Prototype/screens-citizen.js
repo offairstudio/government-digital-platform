@@ -199,7 +199,7 @@ window.CITIZEN = (function(){
     const reqId = state.param || f.reqId;
     const main = `
       ${UI.crumb([{t:'הבקשות שלי',go:"nav('home')"},{t:'מעקב הבקשה',go:"openReq('"+reqId+"','view')"},{t:disc==='dance'?'מועמדות רקדן מצטיין':'מועמדות מוזיקאי מצטיין',strong:true}])}
-      <div class="page-head"><div class="formhead"><div class="emb">${UI.icon(disc==='dance'?"award":"music",24)}</div>
+      <div class="page-head"><div class="formhead"><div class="emb">${UI.icon("music",24)}</div>
         <div class="ttl"><b>${fTitle}</b>
           <span class="org">${f.org} ${UI.statusBadge('wait','השלמת פרטים')}</span>
           <div class="rid">מספר בקשה: <span class="bdi">${f.reqId}</span></div></div></div>
@@ -544,7 +544,7 @@ window.CITIZEN = (function(){
           <li>לאחר מכן הבקשה תועבר לבחינה מקצועית ולהחלטת ועדה.</li>
         </ul></div></div>
     </div>`;
-    return UI.bleed(UI.barApplicant(), main) + UI.govFooter();
+    return UI.bleed(UI.barApplicant(), main);
   }
 
   /* ---------- T-16/T-17/T-15 · Full-page states (citizen-facing) ---------- */
@@ -563,7 +563,7 @@ window.CITIZEN = (function(){
         <button class="btn btn-pri btn-lg" onclick="${which==='empty'?"nav('services')":"nav('home')"}">${v.a}</button>
         ${v.a2?`<button class="btn btn-out btn-lg" onclick="nav('home')">${v.a2}</button>`:''}
       </div></div>`;
-    return UI.bleed(UI.barApplicant(), main) + UI.govFooter();
+    return UI.bleed(UI.barApplicant(), main);
   }
 
   return {login, auth, home, services, service, apply, track, notifications, profile, success, cstate};

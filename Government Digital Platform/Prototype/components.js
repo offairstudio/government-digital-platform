@@ -304,7 +304,7 @@ window.UI = (function(){
     const cls = opts.narrow?'main narrow':(opts.appcol?'main appcol':(opts.formpage?'main formpage':'main'));
     const skip = `<a href="#main" class="skip-link">דלג לתוכן</a>`;
     const overlay = sideHtml ? `<div class="menu-overlay" onclick="toggleMenu()"></div>` : '';
-    return skip + bar + overlay + `<div class="app-body">${sideHtml||''}<main id="main" class="${cls}" tabindex="-1">${mainHtml}</main></div>` + govFooter() + (opts.nofab?'':fab(opts.fab));
+    return skip + bar + overlay + `<div class="app-body">${sideHtml||''}<main id="main" class="${cls}" tabindex="-1">${mainHtml}</main></div>` + (opts.nofab?'':fab(opts.fab));
   }
   function bleed(bar, html){ return bar + html; }
 
